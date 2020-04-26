@@ -1,0 +1,7 @@
+.main {
+    padding-left: 300px;
+    display: inline-block;
+    width: 100%;
+    padding-top: 20px;
+    transition: padding-left .3s ease;
+}
