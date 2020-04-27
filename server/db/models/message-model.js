@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Message = new Schema(
@@ -7,9 +7,9 @@ const Message = new Schema(
         from: { type: String, required: true },
         to: { type: String, required: true },
         conversationId: { type: String, required: true },
-        isEdited: { type: Boolean, default: false }
+        isEdited: { type: Boolean, default: false },
     },
-    { timestamps: true, autoIndex: true, },
+    { timestamps: true, autoIndex: true }
 );
 
-module.exports = mongoose.model('message', Message);
+module.exports = mongoose.model("message", Message);
