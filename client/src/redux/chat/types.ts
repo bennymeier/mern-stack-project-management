@@ -1,3 +1,5 @@
+import { Room } from "../../utils/API";
+
 // Describing the shape of the chat's slice of state
 export interface Message {
   user: string;
@@ -7,7 +9,7 @@ export interface Message {
 
 export interface ChatState {
   messages: Message[];
-  currentConversation: string;
+  currentChannel: Room | undefined;
 }
 
 // Describing the different ACTION NAMES available
@@ -27,11 +29,11 @@ interface DeleteMessageAction {
   };
 }
 
-interface JoinConversation {
+interface SetCurrentChannel {
   type: typeof JOIN_CONVERSATION;
-  payload: string;
+  payload: Room;
 }
 export type ChatActionTypes =
   | SendMessageAction
   | DeleteMessageAction
-  | JoinConversation;
+  | SetCurrentChannel;

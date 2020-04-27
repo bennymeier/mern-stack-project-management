@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { getRooms, Room } from "../../utils/API";
-
-const SelectRoom = () => {
+import { setCurrentChannel } from "../../redux/chat/actions";
+import { connect } from "react-redux";
+export interface SelectRoomProps {
+  setCurrentChannel: typeof setCurrentChannel;
+}
+const SelectRoom: React.FC<SelectRoomProps> = (props) => {
+  const { setCurrentChannel } = props;
   const [rooms, setRooms] = useState<Room[]>([]);
   const [room, setRoom] = useState<Room>();
+  const joinRoom = (room: Room) => {
+    setRoom(room);
+    setCurrentChannel(room);
+  };
   useEffect(() => {
     const fetchRooms = async () => {
       const { data, success } = await getRooms();
@@ -23,7 +32,7 @@ const SelectRoom = () => {
         {!!rooms.length &&
           rooms.map((room) => {
             return (
-              <li onClick={() => setRoom(room)} key={room._id}>
+              <li onClick={() => joinRoom(room)} key={room._id}>
                 {room.name}
               </li>
             );
@@ -32,4 +41,5 @@ const SelectRoom = () => {
     </>
   );
 };
-export default SelectRoom;
+
+export default connect(null, { setCurrentChannel })(SelectRoom);

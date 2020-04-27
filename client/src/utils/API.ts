@@ -113,9 +113,11 @@ export interface GetMessages {
   data: Message[];
 }
 
-export const getMessages = async (): Promise<GetMessages> => {
+export const getMessages = async (
+  conversationId: string
+): Promise<GetMessages> => {
   try {
-    const { data } = await API.get("/messages");
+    const { data } = await API.get(`/messages/${conversationId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -140,7 +142,7 @@ export const getMessage = async (messageId: string): Promise<GetMessage> => {
 
 export interface DeleteMessage {
   success: boolean;
-  data: Message;
+  data: Message[];
 }
 
 export const deleteMessage = async (

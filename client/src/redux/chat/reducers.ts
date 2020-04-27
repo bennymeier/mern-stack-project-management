@@ -8,7 +8,7 @@ import {
 
 const initialState: ChatState = {
   messages: [],
-  currentConversation: "",
+  currentChannel: undefined,
 };
 
 export const chatReducer = (
@@ -31,7 +31,7 @@ export const chatReducer = (
     case JOIN_CONVERSATION:
       return {
         ...state,
-        currentConversation: action.payload,
+        currentChannel: action.payload,
       };
     default:
       return state;

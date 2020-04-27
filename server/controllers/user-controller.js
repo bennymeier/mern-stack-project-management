@@ -15,10 +15,12 @@ const registerUser = (req, res) => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
     } else {
+      const { firstname, lastname, email, password } = req.body;
       const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
+        firstname,
+        lastname,
+        email,
+        password,
       });
 
       // Hash password before saving in database
@@ -43,8 +45,7 @@ const loginUser = (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
 
   // Find user by email
   User.findOne({ email }).then((user) => {
@@ -60,7 +61,12 @@ const loginUser = (req, res) => {
         // Create JWT Payload
         const payload = {
           id: user.id,
-          name: user.name,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          status: user.status,
+          avatar: user.avatar,
+          role: user.role,
         };
 
         // Sign token
@@ -74,6 +80,7 @@ const loginUser = (req, res) => {
             res.json({
               success: true,
               token: "Bearer " + token,
+              data: payload,
             });
           }
         );
@@ -85,6 +92,7 @@ const loginUser = (req, res) => {
     });
   });
 };
+
 module.exports = {
   registerUser,
   loginUser,
