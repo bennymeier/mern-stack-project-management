@@ -1,4 +1,5 @@
 import axios from "axios";
+import { UserData } from "../components/types";
 
 export const API = axios.create({
   baseURL: "http://localhost:1337/api",
@@ -98,7 +99,6 @@ export const createRoom = async (roomData: RoomData): Promise<CreateRoom> => {
 
 export interface Message {
   body: string;
-  conversationId: string;
   createdAt: string;
   isEdited: boolean;
   from: string;
@@ -113,11 +113,9 @@ export interface GetMessages {
   data: Message[];
 }
 
-export const getMessages = async (
-  conversationId: string
-): Promise<GetMessages> => {
+export const getMessages = async (to: string): Promise<GetMessages> => {
   try {
-    const { data } = await API.get(`/messages/${conversationId}`);
+    const { data } = await API.get(`/messages/${to}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -142,7 +140,7 @@ export const getMessage = async (messageId: string): Promise<GetMessage> => {
 
 export interface DeleteMessage {
   success: boolean;
-  data: Message[];
+  data: Message;
 }
 
 export const deleteMessage = async (
@@ -183,7 +181,7 @@ type MessageData = Omit<
 export interface CreateMessage {
   success: boolean;
   message: string;
-  id: string;
+  data: Message;
 }
 
 export const createMessage = async (
@@ -191,6 +189,36 @@ export const createMessage = async (
 ): Promise<CreateMessage> => {
   try {
     const { data } = await API.post(`/message`, messageData);
+    return data;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
+
+export interface GetUserByMail {
+  success: boolean;
+  error?: string;
+  data: UserData;
+}
+export const getUserByMail = async (email: string): Promise<GetUserByMail> => {
+  try {
+    const { data } = await API.get(`/user/${email}`);
+    return data;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
+
+export interface GetUsers {
+  success: boolean;
+  error?: string;
+  data: UserData[];
+}
+export const getUsers = async (): Promise<GetUsers> => {
+  try {
+    const { data } = await API.get("/users");
     return data;
   } catch (err) {
     console.error(err);

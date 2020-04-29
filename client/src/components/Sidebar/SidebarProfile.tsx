@@ -19,7 +19,7 @@ const UserProfile: React.FC<UserProfileProps> = (props) => {
       </div>
       <div className="user-info">
         <span className="user-name">
-          {currentUser.firstname} {currentUser.lastname}
+          <strong>{currentUser.firstname}</strong> {currentUser.lastname}
         </span>
         <span className="user-role">{currentUser.role}</span>
         <span className="user-status">{currentUser.status}</span>

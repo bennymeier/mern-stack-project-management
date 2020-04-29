@@ -10,14 +10,14 @@ export const setCurrentChannel = (currentChannel: Room) => {
   return {
     type: JOIN_CONVERSATION,
     payload: currentChannel,
-  };
+  } as const;
 };
 
 export const sendMessage = (newMessage: Message) => {
   return {
     type: SEND_MESSAGE,
     payload: newMessage,
-  };
+  } as const;
 };
 
 export const deleteMessage = (timestamp: number) => {
@@ -26,5 +26,5 @@ export const deleteMessage = (timestamp: number) => {
     meta: {
       timestamp,
     },
-  };
+  } as const;
 };

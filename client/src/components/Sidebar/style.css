@@ -1,66 +1,143 @@
-.sidebar {
-  width: 260px;
-  height: 100%;
-  max-height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  transition: left .3s ease;
-  background-color: #1d1d1d;
+.sidebar a {
+  color: inherit;
 }
 
-.sidebar:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(29, 29, 29, .8);
-}
-
-.sidebar a:hover {
-  color: #f1f1f1;
-}
-
-.sidebar-header {
-  padding: 10px 20px;
+.sidebar .header {
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+  padding: 0 16px;
+  height: 48px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  z-index: 3;
+  -webkit-transition: background-color .1s linear;
+  transition: background-color .1s linear;
+  color: var(--header-primary);
+  -webkit-box-shadow: var(--elevation-low);
+  box-shadow: var(--elevation-low);
+}
+
+.sidebar .header .chat-name {
+  font-size: 16px;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  font-weight: 600;
+}
+
+.sidebar-conversations .selected {
+  background-color: #747f8d1c;
+}
+
+.sidebar-conversations .content {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
-.sidebar .chat-name {
-  font-size: 2em;
-  font-weight: bold;
+.sidebar-conversations .content i {
+  display: inline-table;
 }
 
-.sidebar-conversations {
-  display: grid;
-  justify-content: center;
-  border-top: 1px solid rgba(255, 255, 255, .4);
-  padding: 10px;
-}
-
-.sidebar-conversations ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.sidebar-conversations li a {
-  display: inline-block;
-  width: 100%;
-  text-decoration: none;
+.sidebar-conversations .item {
+  height: 32px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  overflow: visible;
   position: relative;
-  padding: 8px 30px 8px 20px;
+  margin: 0 10px;
 }
 
-.sidebar-profile {
-  padding: 20px;
+.sidebar-conversations .item:hover {
+  background-color: #747f8d3d;
+}
+
+.sidebar-conversations .name {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, .4);
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
+.sidebar-conversations .unread {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.sidebar-conversations .unread-badge {
+  position: relative;
+  margin-left: 4px;
+  line-height: 0;
+}
+
+.sidebar-conversations .unread-badge-number {
+  background-color: rgb(240, 71, 71);
+  width: 16px;
+  padding-right: 1px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 8px;
+  min-width: 16px;
+  min-height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+/* 
 .sidebar-profile .user-pic {
   float: left;
   width: 60px;
@@ -94,9 +171,4 @@
   font-size: 11px;
   margin-top: 4px;
   color: #bdbdbd;
-}
-
-.sidebar-start-conversation {
-  position: fixed;
-  bottom: 50px;
-}
+} */

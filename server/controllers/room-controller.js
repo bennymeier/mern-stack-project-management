@@ -1,6 +1,6 @@
 const Room = require("../db/models/room-model");
 
-createRoom = (req, res) => {
+const createRoom = (req, res) => {
   const body = req.body;
   if (!body) {
     return res.status(400).json({
@@ -32,7 +32,7 @@ createRoom = (req, res) => {
     });
 };
 
-updateRoom = async (req, res) => {
+const updateRoom = async (req, res) => {
   const body = req.body;
 
   if (!body) {
@@ -73,7 +73,7 @@ updateRoom = async (req, res) => {
   });
 };
 
-deleteRoom = async (req, res) => {
+const deleteRoom = async (req, res) => {
   await Room.findOneAndDelete({ _id: req.params.id }, (err, room) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -87,7 +87,7 @@ deleteRoom = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getRoomById = async (req, res) => {
+const getRoomById = async (req, res) => {
   await Room.findOne({ _id: req.params.id }, (err, room) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -100,7 +100,7 @@ getRoomById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getRooms = async (req, res) => {
+const getRooms = async (req, res) => {
   await Room.find({}, (err, rooms) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });

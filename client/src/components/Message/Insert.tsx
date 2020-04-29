@@ -11,7 +11,6 @@ const Insert = () => {
       body: message,
       to: "meier.robi@web.de",
       from: "meier.benjamin@web.de",
-      conversationId: "5ea5ccf1dee9583234cc7bac",
     });
     const { message: cbMessage, success } = send;
     setCallbackMessage(cbMessage);

@@ -1,0 +1,107 @@
+.message {
+    margin-top: 1.0625rem;
+    min-height: 2.75rem;
+    padding-left: 72px;
+    padding-top: .125rem;
+    padding-bottom: .125rem;
+    padding-right: 48px!important;
+    position: relative;
+    word-wrap: break-word;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    padding-right: 16px;
+    min-height: 1.375rem;
+    transition: background 0.3s ease;
+}
+
+.message:hover {
+    background: var(--background-message-hover);
+}
+
+.message .contents {
+    position: static;
+}
+
+.message .avatar {
+    pointer-events: auto;
+    position: absolute;
+    left: 16px;
+    top: 4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.message .header {
+    overflow: hidden;
+    position: relative;
+    line-height: 1.375rem;
+    min-height: 1.375rem;
+    color: var(--text-muted);
+    white-space: break-spaces;
+    word-wrap: pre-wrap;
+    margin: 0 0 1rem;
+}
+
+.message .username {
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.375rem;
+    color: var(--header-primary);
+    display: inline;
+    vertical-align: baseline;
+    position: relative;
+    margin-right: .25rem;
+}
+
+.message .timestamp {
+    font-size: 0.75rem;
+    line-height: 1.375rem;
+    color: var(--text-muted);
+    vertical-align: baseline;
+    margin-left: .25rem;
+    display: inline-block;
+    height: 1.25rem;
+    cursor: default;
+    pointer-events: none;
+    font-weight: 500;
+}
+
+.ReactVirtualized__Grid__innerScrollContainer {
+    margin-bottom: 30px;
+}
+
+.message .content {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    margin-left: -72px;
+    padding-left: 72px;
+    overflow: hidden;
+    text-indent: 0;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    white-space: pre-wrap;
+    white-space: break-spaces;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    color: var(--text-normal);
+    font-weight: 400;
+}

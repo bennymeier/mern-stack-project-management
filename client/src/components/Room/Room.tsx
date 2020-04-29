@@ -3,7 +3,7 @@ import RoomHeader from "./RoomHeader";
 import RoomMain from "./RoomMain";
 import RoomFooter from "./RoomFooter";
 import { useParams } from "react-router-dom";
-import Sidebar from "../Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 import Main from "../Main";
 import { useHistory } from "react-router-dom";
 import { getRoom, Room } from "../../utils/API";
@@ -41,9 +41,9 @@ const RoomComponent: React.FC<RoomProps> = (props) => {
     <>
       <Sidebar />
       <Main>
-        <RoomHeader />
-        <RoomMain />
-        <RoomFooter />
+          <RoomHeader />
+          <RoomMain />
+          {/* <RoomFooter /> */}
       </Main>
     </>
   );

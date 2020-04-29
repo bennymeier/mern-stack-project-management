@@ -1,6 +1,7 @@
+const getUserByMail = require("./user-controller");
 const Message = require("../db/models/message-model");
 
-createMessage = (req, res) => {
+const createMessage = (req, res) => {
   const body = req.body;
   if (!body) {
     return res.status(400).json({
@@ -20,7 +21,7 @@ createMessage = (req, res) => {
     .then(() => {
       return res.status(201).json({
         success: true,
-        id: message._id,
+        data: message,
         message: "Message created!",
       });
     })
@@ -32,7 +33,7 @@ createMessage = (req, res) => {
     });
 };
 
-updateMessage = async (req, res) => {
+const updateMessage = async (req, res) => {
   const body = req.body;
 
   if (!body) {
@@ -70,7 +71,7 @@ updateMessage = async (req, res) => {
   });
 };
 
-deleteMessage = async (req, res) => {
+const deleteMessage = async (req, res) => {
   await Message.findOneAndDelete({ _id: req.params.id }, (err, message) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -86,7 +87,7 @@ deleteMessage = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getMessageById = async (req, res) => {
+const getMessageById = async (req, res) => {
   await Message.findOne({ _id: req.params.id }, (err, message) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -101,8 +102,8 @@ getMessageById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getMessages = async (req, res) => {
-  await Message.find({ conversationId: req.params.id }, (err, messages) => {
+const getMessages = async (req, res) => {
+  await Message.find({ to: req.params.id }, (err, messages) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }

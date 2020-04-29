@@ -5,7 +5,7 @@ export interface MainProps {
 }
 const Main: React.FC<MainProps> = (props) => {
   const { children } = props;
-  return <main className="main">{children}</main>;
+  return <div className="chat">{children}</div>;
 };
 
 export default Main;

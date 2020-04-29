@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "../Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 import Main from "../Main";
 import { connect } from "react-redux";
 import { logoutUser } from "../../redux/auth/actions";

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 const secretKey = require("../db/secretKey");
+
 const registerUser = (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -36,6 +37,39 @@ const registerUser = (req, res) => {
       });
     }
   });
+};
+
+const getUserByMail = async (req, res) => {
+  try {
+    const user = await User.findOne(
+      { email: req.params.email },
+      { role: 1, firstname: 1, lastname: 1, email: 1, date: 1, __v: 1 }
+    );
+    if (!user) {
+      return res.status(404).json({ success: false, error: `User not found` });
+    }
+    return res.status(200).json({ success: true, data: user });
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err });
+  }
+};
+
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find(
+      {},
+      { role: 1, firstname: 1, lastname: 1, email: 1, date: 1, __v: 1 }
+    );
+    if (!users.length) {
+      return res.status(404).json({ success: false, error: `Users not found` });
+    }
+    return res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err });
+  }
 };
 
 const loginUser = (req, res) => {
@@ -95,5 +129,7 @@ const loginUser = (req, res) => {
 
 module.exports = {
   registerUser,
+  getUserByMail,
+  getUsers,
   loginUser,
 };

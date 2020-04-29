@@ -5,11 +5,13 @@ import { createLogger } from "redux-logger";
 import { chatReducer } from "./chat/reducers";
 import { authReducer } from "./auth/reducers";
 import { errorReducer } from "./error/reducers";
+import { usersReducer } from "./users/reducers";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   chat: chatReducer,
   errors: errorReducer,
+  users: usersReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
