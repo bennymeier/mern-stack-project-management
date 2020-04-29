@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { AppState } from "../../redux";
-import { UserData } from "../types";
+import { User } from "../../utils/API/user_API";
 export interface UserProfileProps {
-  currentUser: UserData;
+  currentUser: User;
 }
 const UserProfile: React.FC<UserProfileProps> = (props) => {
   const { currentUser } = props;
@@ -29,6 +29,6 @@ const UserProfile: React.FC<UserProfileProps> = (props) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  currentUser: state.auth.user as UserData,
+  currentUser: state.auth.user as User,
 });
 export default connect(mapStateToProps)(UserProfile);

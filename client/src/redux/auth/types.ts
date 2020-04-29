@@ -1,8 +1,8 @@
-import { UserData } from "../../components/types";
+import { User } from "../../utils/API/user_API";
 
 export interface AuthState {
   isAuthenticated: boolean;
-  user: UserData | undefined;
+  user: User | undefined;
   loading: boolean;
 }
 
@@ -16,7 +16,7 @@ export interface UserLoading {
 
 export interface SetCurrentUser {
   type: typeof SET_CURRENT_USER;
-  payload: UserData;
+  payload: User;
 }
 
 export type AuthActionTypes = UserLoading | SetCurrentUser;

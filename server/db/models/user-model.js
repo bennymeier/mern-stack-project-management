@@ -24,9 +24,6 @@ const User = new Schema({
     type: String,
     default: "Employee",
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  favoriteProjects: [{ type: String, unique: true }],
 });
 module.exports = mongoose.model("users", User);

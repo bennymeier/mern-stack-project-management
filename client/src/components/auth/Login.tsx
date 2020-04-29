@@ -1,120 +1,100 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Form, Segment, Button, Header, Message } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { loginUser, LoginData } from "../../redux/auth/actions";
 import { AppState } from "../../redux";
+import { AuthState } from "../../redux/auth/types";
 
 export interface LoginProps {
-  auth?: any;
-  history?: any;
+  auth?: AuthState;
   errors?: any;
-  loginUser: (userData: LoginData) => any;
+  loginUser: (userData: LoginData) => void;
+  handleRegister: (page?: string) => void;
 }
 export interface LoginState {
   email: string;
   password: string;
   errors: any;
 }
-class Login extends React.Component<LoginProps, LoginState> {
-  state: LoginState = {
-    email: "",
-    password: "",
-    errors: {},
-  };
+const Login: React.FC<LoginProps> = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<any>();
+  const { auth, loginUser, errors: errorsFromProps, handleRegister } = props;
+  const history = useHistory();
 
-  componentDidMount() {
+  useEffect(() => {
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/home");
+    if (auth?.isAuthenticated) {
+      history.push("/home");
     }
-  }
+  }, [auth]);
 
-  componentWillReceiveProps(nextProps: Partial<LoginProps>) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push("/home");
-    }
+  useEffect(() => {
+    setErrors(errorsFromProps);
+  }, [errorsFromProps]);
 
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors,
-      });
-    }
-  }
-
-  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ [event.target.id]: event.target.value } as any);
-  };
-
-  onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const userData = {
-      email: this.state.email,
-      password: this.state.password,
+      email: email,
+      password: password,
     };
-
-    this.props.loginUser(userData);
+    loginUser(userData);
   };
 
-  render() {
-    const { errors } = this.state;
-
-    return (
-      <div>
-        <Link to="/">Back to home</Link>
-        <div>
-          <h4>
-            <b>Login</b> below
-          </h4>
-          <p className="grey-text text-darken-1">
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </div>
-        <form noValidate onSubmit={this.onSubmit}>
-          <div>
-            <input
-              onChange={this.onChange}
-              value={this.state.email}
-              id="email"
-              type="email"
-            />
-            <label htmlFor="email">Email</label>
-            <span>
-              {errors.email}
-              {errors.emailnotfound}
-            </span>
-          </div>
-          <div>
-            <input
-              onChange={this.onChange}
-              value={this.state.password}
-              id="password"
-              type="password"
-            />
-            <label htmlFor="password">Password</label>
-            <span>
-              {errors.password}
-              {errors.passwordincorrect}
-            </span>
-          </div>
-          <div>
-            <button
-              style={{
-                width: "150px",
-                borderRadius: "3px",
-                letterSpacing: "1.5px",
-                marginTop: "1rem",
-              }}
-              type="submit"
-            >
-              Login
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Header as="h2" color="teal" textAlign="center">
+        Log-in to your account
+      </Header>
+      <Form size="large" onSubmit={handleSubmit}>
+        <Segment stacked>
+          <Form.Input
+            error={
+              errors?.emailnotfound
+                ? { content: errors.emailnotfound, pointing: "below" }
+                : null
+            }
+            value={email}
+            id="email"
+            fluid
+            icon="user"
+            iconPosition="left"
+            placeholder="E-mail address"
+            type="email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <Form.Input
+            error={
+              errors?.passwordincorrect
+                ? { content: errors.passwordincorrect, pointing: "below" }
+                : null
+            }
+            value={password}
+            id="password"
+            fluid
+            icon="lock"
+            iconPosition="left"
+            placeholder="Password"
+            type="password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <Button color="teal" fluid size="large" type="submit">
+            Login
+          </Button>
+        </Segment>
+      </Form>
+      <Message>
+        New to us?{" "}
+        <a onClick={() => handleRegister("register")} href="#">
+          Register
+        </a>
+      </Message>
+    </div>
+  );
+};
 
 const mapStateToProps = (state: AppState) => ({
   auth: state.auth,

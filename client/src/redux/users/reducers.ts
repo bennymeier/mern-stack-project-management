@@ -5,12 +5,12 @@ import {
   UsersActionTypes,
   SET_USER,
 } from "./types";
-import { UserData } from "../../components/types";
+import { User } from "../../utils/API/user_API";
 
 export const usersReducer = (
-  state: UserData[] = [],
+  state: User[] = [],
   action: UsersActionTypes
-): UserData[] => {
+): User[] => {
   switch (action.type) {
     case SET_USERS:
       return action.payload;

@@ -1,7 +1,7 @@
-import { UserData } from "../../components/types";
+import { User } from "../../utils/API/user_API";
 
 export interface UsersState {
-  users: UserData[];
+  users: User[];
 }
 
 export const SET_USERS = "SET_USERS";
@@ -11,22 +11,22 @@ export const DELETE_USER = "DELETE_USER";
 
 export interface SetUsers {
   type: typeof SET_USERS;
-  payload: UserData[];
+  payload: User[];
 }
 
 export interface SetUser {
   type: typeof SET_USER;
-  payload: UserData;
+  payload: User;
 }
 
 export interface AddUser {
   type: typeof ADD_USER;
-  payload: UserData;
+  payload: User;
 }
 
 export interface DeleteUser {
   type: typeof DELETE_USER;
-  payload: UserData;
+  payload: User;
 }
 
 export type UsersActionTypes = SetUsers | SetUser | AddUser | DeleteUser;

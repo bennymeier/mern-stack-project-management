@@ -5,46 +5,68 @@ const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 const secretKey = require("../db/secretKey");
 
-const registerUser = (req, res) => {
+const createUser = async (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (user) {
-      return res.status(400).json({ email: "Email already exists" });
-    } else {
-      const { firstname, lastname, email, password } = req.body;
-      const newUser = new User({
-        firstname,
-        lastname,
-        email,
-        password,
+  const user = await User.findOne({ email: req.body.email });
+  if (user) {
+    return res.status(400).json({ email: "Email already exists" });
+  } else {
+    const newUser = new User(req.body);
+    // Hash password before saving in database
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) throw err;
+        newUser.password = hash;
+        newUser
+          .save()
+          .then((user) => res.json(user))
+          .catch((err) => console.log(err));
       });
+    });
+  }
+};
 
-      // Hash password before saving in database
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then((user) => res.json(user))
-            .catch((err) => console.log(err));
-        });
-      });
-    }
-  });
+const updateUser = async (req, res) => {
+  const body = req.body;
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: "You must provide a body to update",
+    });
+  }
+
+  try {
+    // const user = await User.findOne({ email: req.params.email });
+    // if (user && body.favoriteProjects) {
+    //   console.log(body.favoriteProjects);
+    //   const favoriteProjects = user.favoriteProjects.filter(
+    //     favoriteProject !== body.favoriteProjects
+    //   );
+    // }
+    // console.log("OK");
+    await User.updateOne({ email: req.params.email }, body);
+    return res.status(200).json({
+      success: true,
+      message: "User updated!",
+    });
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      error,
+      message: "User not updated!",
+    });
+  }
 };
 
 const getUserByMail = async (req, res) => {
   try {
-    const user = await User.findOne(
-      { email: req.params.email },
-      { role: 1, firstname: 1, lastname: 1, email: 1, date: 1, __v: 1 }
-    );
+    const user = await User.findOne({ email: req.params.email });
     if (!user) {
       return res.status(404).json({ success: false, error: `User not found` });
     }
@@ -56,10 +78,7 @@ const getUserByMail = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find(
-      {},
-      { role: 1, firstname: 1, lastname: 1, email: 1, date: 1, __v: 1 }
-    );
+    const users = await User.find({});
     if (!users.length) {
       return res.status(404).json({ success: false, error: `Users not found` });
     }
@@ -69,6 +88,20 @@ const getUsers = async (req, res) => {
     });
   } catch (err) {
     return res.status(400).json({ success: false, error: err });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findOneAndDelete({ _id: req.params.id });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: `User not found` });
+    }
+
+    return res.status(200).json({ success: true, id: user._id });
+  } catch (error) {
+    return res.status(400).json({ success: false, error });
   }
 };
 
@@ -128,8 +161,10 @@ const loginUser = (req, res) => {
 };
 
 module.exports = {
-  registerUser,
+  createUser,
   getUserByMail,
   getUsers,
+  updateUser,
+  deleteUser,
   loginUser,
 };

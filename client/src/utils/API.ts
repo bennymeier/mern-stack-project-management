@@ -1,5 +1,4 @@
 import axios from "axios";
-import { UserData } from "../components/types";
 
 export const API = axios.create({
   baseURL: "http://localhost:1337/api",
@@ -196,32 +195,3 @@ export const createMessage = async (
   }
 };
 
-export interface GetUserByMail {
-  success: boolean;
-  error?: string;
-  data: UserData;
-}
-export const getUserByMail = async (email: string): Promise<GetUserByMail> => {
-  try {
-    const { data } = await API.get(`/user/${email}`);
-    return data;
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-};
-
-export interface GetUsers {
-  success: boolean;
-  error?: string;
-  data: UserData[];
-}
-export const getUsers = async (): Promise<GetUsers> => {
-  try {
-    const { data } = await API.get("/users");
-    return data;
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-};

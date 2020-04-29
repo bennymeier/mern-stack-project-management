@@ -8,12 +8,12 @@ const PrivateRoute: React.FC<any> = ({
   auth,
   ...rest
 }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      auth.isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
-    }
-  />
+    <Route
+      {...rest}
+      render={(props) =>
+        auth.isAuthenticated ? <Component {...props} /> : <Redirect to="/" />
+      }
+    />
 );
 
 const mapStateToProps = (state: AppState) => ({

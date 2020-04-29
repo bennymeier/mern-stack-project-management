@@ -1,9 +1,9 @@
 import setAuthToken from "../../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { SET_CURRENT_USER, USER_LOADING } from "./types";
-import { GET_ERRORS } from "../error/types";
+import { SET_ERRORS } from "../error/types";
 import { API } from "../../utils/API";
-import { UserData } from "../../components/types";
+import { User } from "../../utils/API/user_API";
 
 export interface RegisterData {
   firstname: string;
@@ -18,40 +18,39 @@ export const registerUser = (userData: RegisterData, history: any) => (
   dispatch: any
 ) => {
   API.post("/register", userData)
-    .then((res) => history.push("/login"))
-    .catch((err) =>
+    .then(() => history.push("/"))
+    .catch((err) => {
       dispatch({
-        type: GET_ERRORS,
+        type: SET_ERRORS,
         payload: err.response.data,
-      })
-    );
+      });
+    });
 };
 
 // Login - get user token
 export const loginUser = (userData: LoginData) => (dispatch: any) => {
   API.post("/login", userData)
     .then((res) => {
-      console.log("res ", res);
       // Save to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
       // Set token to Auth header
       setAuthToken(token);
       // Decode token to get user data
-      const decoded: UserData = jwt_decode(token);
+      const decoded: User = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
     })
     .catch((err) =>
       dispatch({
-        type: GET_ERRORS,
+        type: SET_ERRORS,
         payload: err.response.data,
       })
     );
 };
 
 // Set logged in user
-export const setCurrentUser = (decoded: UserData) => {
+export const setCurrentUser = (decoded: User) => {
   return {
     type: SET_CURRENT_USER,
     payload: decoded,

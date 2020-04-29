@@ -1,8 +1,8 @@
-export const GET_ERRORS = "GET_ERRORS";
+export const SET_ERRORS = "SET_ERRORS";
 
-interface GetErrors {
-    type: typeof GET_ERRORS;
-    payload: any;
-  }
-  
-  export type ErrorActionTypes = GetErrors;
+interface SetErrors {
+  type: typeof SET_ERRORS;
+  payload: any;
+}
+
+export type ErrorActionTypes = SetErrors;

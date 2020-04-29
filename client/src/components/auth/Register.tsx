@@ -1,152 +1,138 @@
-import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
+import { Form, Segment, Button, Header, Message } from "semantic-ui-react";
 import { registerUser, RegisterData } from "../../redux/auth/actions";
 import { AppState } from "../../redux";
+import { AuthState } from "../../redux/auth/types";
 
 export interface RegisterProps {
-  auth?: any;
-  history?: any;
+  auth?: AuthState;
   errors?: any;
   registerUser: (userData: RegisterData, history: any) => void;
+  handleRegister: (page?: string) => any;
 }
-export interface RegisterState {
-  firstname: string;
-  lastname?: string;
-  email: string;
-  password: string;
-  password2: string;
-  errors: any;
-}
-class Register extends React.Component<RegisterProps, RegisterState> {
-  state: RegisterState = {
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-    password2: "",
-    errors: {},
-  };
+const Register: React.FC<RegisterProps> = (props) => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [errors, setErrors] = useState<any>();
+  const { auth, errors: errorsFromProps, registerUser, handleRegister } = props;
+  const history = useHistory();
 
-  componentDidMount() {
-    // If logged in and user navigates to Register page, should redirect them to dashboard
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/home");
+  useEffect(() => {
+    // If logged in and user navigates to Login page, should redirect them to dashboard
+    if (auth?.isAuthenticated) {
+      history.push("/home");
     }
-  }
+  }, [auth]);
 
-  componentWillReceiveProps(nextProps: RegisterProps) {
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors,
-      });
-    }
-  }
+  useEffect(() => {
+    setErrors(errorsFromProps);
+  }, [errorsFromProps]);
 
-  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ [event.target.id]: event.target.value } as any);
-  };
-
-  onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const newUser = {
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2,
+      firstname,
+      lastname,
+      email,
+      password,
+      password2,
     };
-
-    this.props.registerUser(newUser, this.props.history);
+    registerUser(newUser, history);
   };
 
-  render() {
-    const { errors } = this.state;
-
-    return (
-      <div>
-        <Link to="/">Back to home</Link>
-        <div>
-          <h4>
-            <b>Register</b> below
-          </h4>
-          <p>
-            Already have an account? <Link to="/login">Log in</Link>
-          </p>
-        </div>
-        <form noValidate onSubmit={this.onSubmit}>
-          <div>
-            <label htmlFor="firstname">Firstname</label>
-            <input
-              onChange={this.onChange}
-              value={this.state.firstname}
-              id="firstname"
-              type="text"
-            />
-            <label htmlFor="lastname">Lastname</label>
-            <input
-              onChange={this.onChange}
-              value={this.state.lastname}
-              id="lastname"
-              type="text"
-            />
-            <span>{errors.name}</span>
-          </div>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              onChange={this.onChange}
-              value={this.state.email}
-              id="email"
-              type="email"
-            />
-            <span>{errors.email}</span>
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <input
-              onChange={this.onChange}
-              value={this.state.password}
-              id="password"
-              type="password"
-            />
-            <span>{errors.password}</span>
-          </div>
-          <div>
-            <label htmlFor="password2">Confirm Password</label>
-            <input
-              onChange={this.onChange}
-              value={this.state.password2}
-              id="password2"
-              type="password"
-            />
-            <span>{errors.password2}</span>
-          </div>
-          <div>
-            <button
-              style={{
-                width: "150px",
-                borderRadius: "3px",
-                letterSpacing: "1.5px",
-                marginTop: "1rem",
-              }}
-              type="submit"
-            >
-              Sign up
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Header as="h2" color="teal" textAlign="center">
+        Register to use the platform
+      </Header>
+      <Form size="large" onSubmit={handleSubmit}>
+        <Segment stacked>
+          <Form.Input
+            error={
+              errors?.email
+                ? { content: errors.email, pointing: "below" }
+                : null
+            }
+            value={email}
+            id="email"
+            fluid
+            icon="user"
+            iconPosition="left"
+            placeholder="E-mail address"
+            type="email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <Form.Input
+            value={firstname}
+            id="firstname"
+            fluid
+            icon="user"
+            iconPosition="left"
+            placeholder="Firstname"
+            onChange={(event) => setFirstname(event.target.value)}
+          />
+          <Form.Input
+            value={lastname}
+            id="lastname"
+            fluid
+            icon="user"
+            iconPosition="left"
+            placeholder="Lastname"
+            onChange={(event) => setLastname(event.target.value)}
+          />
+          <Form.Input
+            error={
+              errors?.password
+                ? { content: errors.password, pointing: "below" }
+                : null
+            }
+            value={password}
+            id="password"
+            fluid
+            icon="lock"
+            iconPosition="left"
+            placeholder="Password"
+            type="password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <Form.Input
+            error={
+              errors?.password2
+                ? { content: errors.password2, pointing: "below" }
+                : null
+            }
+            value={password2}
+            id="password2"
+            fluid
+            icon="lock"
+            iconPosition="left"
+            placeholder="Repeat password"
+            type="password"
+            onChange={(event) => setPassword2(event.target.value)}
+          />
+          <Button color="teal" fluid size="large" type="submit">
+            Register
+          </Button>
+        </Segment>
+      </Form>
+      <Message>
+        Already have an account?{" "}
+        <a onClick={() => handleRegister("register")} href="#">
+          Login
+        </a>
+      </Message>
+    </div>
+  );
+};
 
 const mapStateToProps = (state: AppState) => ({
   auth: state.auth,
   errors: state.errors,
 });
 
-// TODO: Fix typing for registerUser method
-// @ts-ignore
-export default connect(mapStateToProps, { registerUser })(withRouter(Register));
+export default connect(mapStateToProps, { registerUser })(Register);

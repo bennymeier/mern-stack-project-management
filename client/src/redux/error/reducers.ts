@@ -1,4 +1,4 @@
-import { GET_ERRORS, ErrorActionTypes } from "./types";
+import { SET_ERRORS, ErrorActionTypes } from "./types";
 
 const initialState = {};
 
@@ -7,8 +7,8 @@ export const errorReducer = (
   action: ErrorActionTypes
 ) => {
   switch (action.type) {
-    case GET_ERRORS:
-      return { ...state };
+    case SET_ERRORS:
+      return { ...action.payload };
     default:
       return state;
   }
