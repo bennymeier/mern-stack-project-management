@@ -1,4 +1,4 @@
-import { Room } from "../../utils/API";
+import { Room } from "../../utils/API/API";
 
 // Describing the shape of the chat's slice of state
 export interface Message {

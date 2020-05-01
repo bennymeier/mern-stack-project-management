@@ -1,4 +1,4 @@
-import { API } from "../API";
+import { API } from "./API";
 
 export type UserRoles = "Administrator" | "Client" | "Employee";
 export interface UserStatus {

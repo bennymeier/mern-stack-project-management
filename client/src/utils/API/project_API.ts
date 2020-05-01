@@ -1,6 +1,4 @@
-import axios from "axios";
-import { API } from "../API";
-import Projects from "../../pages/Projects";
+import { API } from "./API";
 
 export interface Project {
   name: string;
@@ -17,12 +15,8 @@ export interface CreateProject {
   error: string;
   data: Project;
 }
-export type PartialProject = Omit<
-  Project,
-  "members" | "administrators" | "createdAt" | "updatedAt" | "_id"
->;
 export const createProject = async (
-  project: PartialProject
+  project: Partial<Project>
 ): Promise<CreateProject> => {
   try {
     const { data } = await API.post("/project", project);
@@ -39,6 +33,19 @@ export interface GetProject {
 export const getProject = async (id: string): Promise<GetProject> => {
   try {
     const { data } = await API.get(`/project/${id}`);
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export interface GetProject {
+  success: boolean;
+  data: Project;
+}
+export const getProjectByKey = async (key: string): Promise<GetProject> => {
+  try {
+    const { data } = await API.get(`/project/${key}`);
     return data;
   } catch (err) {
     return err;

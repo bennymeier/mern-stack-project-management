@@ -4,7 +4,7 @@ import {
   DELETE_MESSAGE,
   JOIN_CONVERSATION,
 } from "./types";
-import { Room } from "../../utils/API";
+import { Room } from "../../utils/API/API";
 
 export const setCurrentChannel = (currentChannel: Room) => {
   return {

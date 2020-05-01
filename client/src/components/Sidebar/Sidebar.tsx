@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
-import { getRooms, Room } from "../../utils/API";
+import { getRooms, Room } from "../../utils/API/API";
 import { connect } from "react-redux";
 import { setCurrentChannel } from "../../redux/chat/actions";
 import { ChatState } from "../../redux/chat/types";

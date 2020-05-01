@@ -4,6 +4,7 @@ import { Project, getProjects } from "../../utils/API/project_API";
 import { connect } from "react-redux";
 import { AppState } from "../../redux";
 import { User, updateUser } from "../../utils/API/user_API";
+import { Link } from "react-router-dom";
 
 export interface ProjectsTable {
   currentUser: User;
@@ -38,13 +39,13 @@ const ProjectsTable: React.FC<ProjectsTable> = (props) => {
     }
   };
   return (
-    <Table singleLine>
+    <Table singleLine selectable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell width="2">Star</Table.HeaderCell>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Key</Table.HeaderCell>
-          <Table.HeaderCell>Lead</Table.HeaderCell>
+          <Table.HeaderCell width="5">Name</Table.HeaderCell>
+          <Table.HeaderCell width="5">Key</Table.HeaderCell>
+          <Table.HeaderCell width="5">Lead</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
 
@@ -64,7 +65,11 @@ const ProjectsTable: React.FC<ProjectsTable> = (props) => {
                   onClick={() => handleFavoriteClick(project._id)}
                 />
               </Table.Cell>
-              <Table.Cell>{project.name}</Table.Cell>
+              <Table.Cell>
+                <Link to={`/projects/${project.key}`}>
+                  <strong>{project.name}</strong>
+                </Link>
+              </Table.Cell>
               <Table.Cell>{project.key}</Table.Cell>
               <Table.Cell>{project.administrators[0]}</Table.Cell>
             </Table.Row>

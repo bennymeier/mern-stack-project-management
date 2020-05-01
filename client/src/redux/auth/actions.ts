@@ -2,7 +2,7 @@ import setAuthToken from "../../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { SET_CURRENT_USER, USER_LOADING } from "./types";
 import { SET_ERRORS } from "../error/types";
-import { API } from "../../utils/API";
+import { API } from "../../utils/API/API";
 import { User } from "../../utils/API/user_API";
 
 export interface RegisterData {

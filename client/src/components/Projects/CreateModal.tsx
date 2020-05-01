@@ -1,20 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Form, Modal, Message } from "semantic-ui-react";
-import { createProject } from "../../utils/API/project_API";
+import { createProject, Project } from "../../utils/API/project_API";
+import { User } from "../../utils/API/user_API";
 
 export interface CreateModalProps {
+  currentUser: User;
   isOpen: boolean;
   handleClose: () => void;
 }
 const CreateModal: React.FC<CreateModalProps> = (props) => {
-  const { isOpen, handleClose } = props;
+  const { isOpen, handleClose, currentUser } = props;
   const [projectName, setName] = useState("");
   const [projectKey, setKey] = useState("");
   const [error, setError] = useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const project = { key: projectKey, name: projectName };
-    const { data, success } = await createProject(project);
+    const project: Partial<Project> = {
+      key: projectKey,
+      name: projectName,
+      administrators: [currentUser.email],
+    };
+    const { success } = await createProject(project);
     if (success) {
       setName("");
       setKey("");
@@ -49,6 +55,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
               visible={error}
             />
             <Button
+              color="green"
               type="submit"
               floated="right"
               className="mb"

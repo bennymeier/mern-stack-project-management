@@ -2,16 +2,36 @@ import React, { useState, useEffect } from "react";
 import { Dropdown, Menu, Button } from "semantic-ui-react";
 import { routes } from "../../utils/routes";
 import { Link, withRouter } from "react-router-dom";
-import CreateModal from "../Projects/CreateModal";
+import CreateProjectModal from "../Projects/CreateModal";
+import CreateIssueModal from "../Issue/CreateModal";
+import { connect } from "react-redux";
+import { AppState } from "../../redux";
+import { User } from "../../utils/API/user_API";
 
-const FixedMenu: React.FC<any> = (props) => {
-  const { location } = props;
+export interface FixedMenuProps {
+  currentUser?: User;
+  location?: any;
+}
+const FixedMenu: React.FC<FixedMenuProps> = (props) => {
+  const { location, currentUser } = props;
   const { pathname } = location;
-  const [isOpen, setOpen] = useState(false);
+  const [isProjectOpen, setProjectOpen] = useState(false);
+  const [isIssueOpen, setIssueOpen] = useState(false);
 
   return (
     <>
-      <CreateModal isOpen={isOpen} handleClose={() => setOpen(false)} />
+      <CreateProjectModal
+        isOpen={isProjectOpen}
+        handleClose={() => setProjectOpen(false)}
+        currentUser={currentUser as User}
+      />
+      {isIssueOpen && (
+        <CreateIssueModal
+          isOpen={isIssueOpen}
+          handleClose={() => setIssueOpen(false)}
+          currentUser={currentUser as User}
+        />
+      )}
       <Menu fixed="top" inverted>
         <Menu.Item
           as={Link}
@@ -37,7 +57,7 @@ const FixedMenu: React.FC<any> = (props) => {
             >
               View all projects
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => setOpen(!isOpen)}>
+            <Dropdown.Item onClick={() => setProjectOpen(!isProjectOpen)}>
               Create project
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -57,12 +77,16 @@ const FixedMenu: React.FC<any> = (props) => {
           People
         </Menu.Item>
 
-        <Button color="blue" size="medium">
+        <Button
+          color="blue"
+          size="medium"
+          onClick={() => setIssueOpen(!isIssueOpen)}
+        >
           Create
         </Button>
 
         <Menu.Menu position="right">
-          <Dropdown item text="Username">
+          <Dropdown item text={currentUser?.firstname}>
             <Dropdown.Menu>
               <Dropdown.Item>Personal Settings</Dropdown.Item>
               <Dropdown.Divider></Dropdown.Divider>
@@ -78,5 +102,7 @@ const FixedMenu: React.FC<any> = (props) => {
     </>
   );
 };
-
-export default withRouter(FixedMenu);
+const mapStateToProps = (state: AppState) => ({
+  currentUser: state.auth.user,
+});
+export default connect(mapStateToProps)(withRouter(FixedMenu));

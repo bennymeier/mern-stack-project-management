@@ -68,9 +68,9 @@ const deleteProject = async (req, res) => {
   }
 };
 
-const getProjectById = async (req, res) => {
+const getProjectByKey = async (req, res) => {
   try {
-    const project = await Project.findOne({ _id: req.params.id });
+    const project = await Project.findOne({ key: req.params.key });
 
     if (!project) {
       return res
@@ -104,6 +104,6 @@ module.exports = {
   createProject,
   updateProject,
   deleteProject,
-  getProjectById,
+  getProjectByKey,
   getProjects,
 };

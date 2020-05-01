@@ -1,0 +1,83 @@
+import { API } from "./API";
+
+export type IssueTypeIds = "bug" | "epic" | "story" | "task";
+export interface IssueType {
+  id: IssueTypeIds;
+  label: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateIssueType {
+  success: boolean;
+  error: string;
+  data: IssueType;
+}
+export const createIssue = async (
+  issuetype: Partial<IssueType>
+): Promise<CreateIssueType> => {
+  try {
+    const { data } = await API.post("/issuetype", issuetype);
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export interface GetIssueType {
+  success: boolean;
+  data: IssueType;
+}
+export const getIssueType = async (id: string): Promise<GetIssueType> => {
+  try {
+    const { data } = await API.get(`/issuetype/${id}`);
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export interface GetIssueTypes {
+  success: boolean;
+  data: IssueType[];
+  error: string;
+}
+export const getIssueTypes = async (): Promise<GetIssueTypes> => {
+  try {
+    const { data } = await API.get("/issuetypes");
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export interface UpdateIssueType {
+  success: boolean;
+  message: string;
+}
+export const updateIssue = async (
+  id: string,
+  issuetype: Partial<IssueType>
+): Promise<UpdateIssueType> => {
+  try {
+    const { data } = await API.put(`/issuetype/${id}`, issuetype);
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export interface DeleteIssueType {
+  success: boolean;
+  id: string;
+  error: string;
+}
+export const deleteIssueType = async (id: string): Promise<DeleteIssueType> => {
+  try {
+    const { data } = await API.delete(`/issuetype/${id}`);
+    return data;
+  } catch (err) {
+    return err;
+  }
+};

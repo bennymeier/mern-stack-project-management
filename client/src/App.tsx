@@ -18,6 +18,7 @@ import Dashboards from "./pages/Dashboards";
 import "./index.css";
 import People from "./pages/People";
 import { getUsers, User, getUserByMail } from "./utils/API/user_API";
+import Project from "./pages/Project";
 moment.locale(getLocale());
 
 const store = configureStore();
@@ -63,6 +64,11 @@ const App = () => {
           <PrivateRoute exact path={routes["HOME"]} component={Home} />
           <PrivateRoute exact path={routes["YOUR_WORK"]} component={YourWork} />
           <PrivateRoute exact path={routes["PROJECTS"]} component={Projects} />
+          <PrivateRoute
+            exact
+            path={`${routes["PROJECTS"]}/:id`}
+            component={Project}
+          />
           <PrivateRoute
             exact
             path={routes["DASHBOARDS"]}

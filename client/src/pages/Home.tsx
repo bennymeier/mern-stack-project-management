@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { logoutUser } from "../redux/auth/actions";
 import Main from "../components/Main/Main";
 import { User } from "../utils/API/user_API";
+import AvatarUpload from "../components/User/AvatarUpload";
 
 export interface HomeProps {
   logoutUser: any;
@@ -24,7 +25,13 @@ const Home: React.FC<HomeProps> = (props) => {
         <b>Hey there,</b> {currentUser.firstname}
         <p>You are logged in!</p>
       </h4>
-      <button onClick={onLogoutClick}>Logout</button>
+      <AvatarUpload />
+      <button
+        onClick={onLogoutClick}
+        style={{ position: "fixed", bottom: 100 }}
+      >
+        Logout
+      </button>
     </Main>
   );
 };

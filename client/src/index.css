@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,900;1,400&display=swap');
+body {
+  height: auto !important;
+}
+
 .theme-dark {
   --header-primary: #fff;
   --header-secondary: #b9bbbe;
