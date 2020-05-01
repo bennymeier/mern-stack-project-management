@@ -49,23 +49,23 @@ export const deleteAvatar = async (userId: string): Promise<DeleteAvatar> => {
   }
 };
 
+export interface GetAvatars {
+  success: boolean;
+  data: Avatar[];
+  error: string;
+}
+export const getAvatars = async (): Promise<GetAvatars> => {
+  try {
+    const { data } = await API.get("/avatars");
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
 // export const getIssue = async (id: string): Promise<GetIssue> => {
 //   try {
 //     const { data } = await API.get(`/issue/${id}`);
-//     return data;
-//   } catch (err) {
-//     return err;
-//   }
-// };
-
-// export interface GetIssues {
-//   success: boolean;
-//   data: Issue[];
-//   error: string;
-// }
-// export const getIssues = async (): Promise<GetIssues> => {
-//   try {
-//     const { data } = await API.get("/issues");
 //     return data;
 //   } catch (err) {
 //     return err;

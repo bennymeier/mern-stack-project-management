@@ -88,10 +88,6 @@ const uploadAvatar = async (req, res) => {
   }
 };
 
-const updateAvatar = async (req, res) => {
-  return false;
-};
-
 const deleteAvatar = async (req, res) => {
   try {
     const oldAvatar = await UserAvatar.findOne({ userId: req.params.id });
@@ -126,11 +122,29 @@ const deleteAvatar = async (req, res) => {
   }
 };
 
+const updateAvatar = async (req, res) => {
+  return res
+    .status(400)
+    .json({ success: false, message: "Route not implemented." });
+};
+
 const getAvatarById = async (req, res) => {
-  return false;
+  return res
+    .status(400)
+    .json({ success: false, message: "Route not implemented." });
 };
 const getAvatars = async (req, res) => {
-  return false;
+  await UserAvatar.find({}, (err, avatars) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err });
+    }
+    if (!avatars.length) {
+      return res
+        .status(404)
+        .json({ success: false, error: `Avatars not found` });
+    }
+    return res.status(200).json({ success: true, data: avatars });
+  }).catch((err) => console.log(err));
 };
 
 module.exports = {
