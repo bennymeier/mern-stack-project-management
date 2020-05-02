@@ -47,3 +47,33 @@ i.pointer {
 i.pointer:hover {
   color: yellowgreen;
 }
+
+.project-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.project-header .left {
+  order: 1;
+  align-self: flex-start;
+}
+
+.project-header .right {
+  order: 2;
+  align-self: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  float: none;
+  padding: 0;
+}
+
+.project-content .list {
+  display: flex;
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+.project-content .list li:not(:first-of-type) {
+  margin: 0 0.8em;
+}

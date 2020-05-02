@@ -1,0 +1,121 @@
+.drag-container {
+    margin: 20px auto;
+}
+
+.drag-list {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: start;
+    align-items: flex-start;
+}
+
+.drag-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 1px 0 1px 0;
+}
+
+@media (max-width: 690px) {
+    .drag-list {
+        display: block;
+    }
+}
+
+.drag-column {
+    -webkit-box-flex: 1;
+    flex: 1;
+    margin: 0 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 690px) {
+    .drag-column {
+        margin-bottom: 30px;
+    }
+}
+
+.drag-column h2 {
+    color: rgb(255, 255, 255);
+    font-size: 1rem;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.drag-column-backlog .drag-column-header, .drag-column-backlog .is-moved, .drag-column-backlog .drag-options {
+    background: #FB7D44;
+}
+
+.drag-column-todo .drag-column-header, .drag-column-todo .is-moved, .drag-column-todo .drag-options {
+    background: #2A92BF;
+}
+
+.drag-column-in-progress .drag-column-header, .drag-column-in-progress .is-moved, .drag-column-in-progress .drag-options {
+    background: #F4CE46;
+}
+
+.drag-column-done .drag-column-header, .drag-column-done .is-moved, .drag-column-done .drag-options {
+    background: #00B961;
+}
+
+.drag-column-header {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.drag-inner-list {
+    min-height: 50px;
+    background-color: rgb(235, 236, 240);
+    -webkit-transition: background-color 0.2s ease 0s, opacity 0.1s ease 0s;
+    transition: background-color 0.2s ease 0s, opacity 0.1s ease 0s;
+}
+
+.drag-item {
+    min-height: 85px;
+    max-height: 120px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: none;
+    box-sizing: border-box;
+    margin: 8px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: rgb(9, 30, 66);
+    display: -webkit-box;
+    display: flex;
+    border-radius: 2px;
+    border-width: 2px;
+    border-style: solid;
+    -webkit-border-image: initial;
+    -o-border-image: initial;
+    border-image: initial;
+    border-color: transparent;
+    padding: 8px
+}
+
+.drag-item:focus {
+    box-shadow: none;
+    outline: none;
+    border-color: rgba(9, 30, 66, 0.71);
+}
+
+.drag-item.is-moving {
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.drag-header-more {
+    cursor: pointer;
+}

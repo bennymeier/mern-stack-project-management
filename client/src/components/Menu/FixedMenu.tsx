@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Dropdown, Menu, Button } from "semantic-ui-react";
 import { routes } from "../../utils/routes";
 import { Link, withRouter } from "react-router-dom";
-import CreateProjectModal from "../Projects/CreateModal";
+import CreateProjectModal from "../Project/CreateModal";
 import CreateIssueModal from "../Issue/CreateModal";
 import { connect } from "react-redux";
 import { AppState } from "../../redux";

@@ -1,6 +1,4 @@
 import React from "react";
-import moment from "moment";
-import { getLocale } from "./utils/helpers";
 import { Provider } from "react-redux";
 import { configureStore } from "./redux/index";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -19,7 +17,6 @@ import "./index.css";
 import People from "./pages/People";
 import { getUsers, User, getUserByMail } from "./utils/API/user_API";
 import Project from "./pages/Project";
-moment.locale(getLocale());
 
 const store = configureStore();
 

@@ -10,6 +10,8 @@ const projectRouter = require("./routes/project-router");
 const issueRouter = require("./routes/issue-router");
 const issueTypeRouter = require("./routes/issuetype-router");
 const avatarFileUploadRouter = require("./routes/user-avatar-router");
+const priorityRouter = require("./routes/priority-router");
+const kanbanTypeRouter = require("./routes/kanbantype-router");
 const app = express();
 const apiPort = 1337;
 
@@ -25,10 +27,6 @@ app.use(passport.initialize());
 // Passport config
 require("./db/passport")(passport);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.use("/api", [
   roomRouter,
   messageRouter,
@@ -37,6 +35,8 @@ app.use("/api", [
   issueRouter,
   issueTypeRouter,
   avatarFileUploadRouter,
+  priorityRouter,
+  kanbanTypeRouter,
 ]);
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));

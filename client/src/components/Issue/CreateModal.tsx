@@ -3,10 +3,16 @@ import { Button, Form, Modal, Message, Icon } from "semantic-ui-react";
 import { getProjects } from "../../utils/API/project_API";
 import { User, getUsers } from "../../utils/API/user_API";
 import Select from "react-select";
-import { Issue } from "../../utils/API/issue_API";
+import { Issue, createIssue } from "../../utils/API/issue_API";
 import { getIssueTypes } from "../../utils/API/issuetype_API";
-import { getIssueTypeIcon } from "../../utils/helpers";
+import { getIssueTypeIcon, getPriorityIcon } from "../../utils/helpers";
+import { getPriorities } from "../../utils/API/priority_API";
+import { KanbanType, getKanbanTypes } from "../../utils/API/kanbantype_API";
 
+export interface ReactSelectProps {
+  value: string;
+  label: string | React.ReactNode;
+}
 export interface CreateModalProps {
   currentUser: User;
   isOpen: boolean;
@@ -14,19 +20,19 @@ export interface CreateModalProps {
 }
 const CreateModal: React.FC<CreateModalProps> = (props) => {
   const { isOpen, handleClose, currentUser } = props;
-  const [projects, setProjects] = useState<any>([]);
-  const [projectId, setProjectId] = useState("");
-  const [issueTypeId, setIssueTypeId] = useState("");
-  const [issueTypes, setIssueTypes] = useState<any>([]);
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [projectLabel, setProjectLabel] = useState<ReactSelectProps>();
+  const [issueTypeLabel, setIssueTypeLabel] = useState<ReactSelectProps>();
+  const [issueTypes, setIssueTypes] = useState<any[]>([]);
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
-  const [assigneeId, setAssigneeId] = useState("");
-  const [assignees, setAssignees] = useState<any>([]);
-  const [priorityId, setPriorityId] = useState("");
-  const [priorities, setPriorites] = useState([]);
+  const [assigneeLabel, setAssigneeLabel] = useState<ReactSelectProps>();
+  const [assignees, setAssignees] = useState<any[]>([]);
+  const [priorityLabel, setPriorityLabel] = useState<ReactSelectProps>();
+  const [priorities, setPriorites] = useState<any[]>([]);
   const [epicId, setEpicId] = useState("");
-  const [epics, setEpics] = useState([]);
+  const [epics, setEpics] = useState<any[]>([]);
+  const [kanbanTypes, setKanbanTypes] = useState<KanbanType[]>([]);
   const [projectsAreLoading, setProjectsLoading] = useState(true);
   const [issueTypesAreLoading, setIssueTypesLoading] = useState(true);
   const [assigneesAreLoading, setAssigneesLoading] = useState(true);
@@ -35,6 +41,31 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
   const [error, setError] = useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const issue: Partial<Issue> = {
+      projectId: projectLabel?.value || "",
+      creatorId: currentUser._id,
+      issueTypeId: issueTypeLabel?.value || "",
+      assigneeId: assigneeLabel?.value || "",
+      priorityId: priorityLabel?.value || "",
+      statusId: kanbanTypes[0]._id,
+      epicId,
+      summary,
+      description,
+    };
+    const { success } = await createIssue(issue);
+    if (success) {
+      handleClose();
+    } else {
+      setError(true);
+    }
+  };
+
+  const assignMeHandler = () => {
+    const me = assignees.find((assignee) => assignee.value === currentUser._id);
+    setAssigneeLabel({
+      value: me.value,
+      label: `${currentUser.firstname} ${currentUser.lastname}`,
+    });
   };
 
   useEffect(() => {
@@ -42,9 +73,13 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
       const { data, success } = await getProjects();
       setProjectsLoading(false);
       if (success) {
+        setProjectLabel({
+          value: data[0]._id,
+          label: `${data[0].name} (${data[0].key})`,
+        });
         const prepareData = data.map((project) => {
           return {
-            value: project.key,
+            value: project._id,
             label: `${project.name} (${project.key})`,
           };
         });
@@ -57,13 +92,25 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
       const { data, success } = await getIssueTypes();
       setIssueTypesLoading(false);
       if (success) {
-        const prepareData = data.map((issueType) => {
-          const issueIcon: any = getIssueTypeIcon(issueType.id);
-          return {
-            value: issueType.id,
+        const issueType = data.find((type) => type.id === "story");
+        if (issueType) {
+          setIssueTypeLabel({
+            value: issueType._id,
             label: (
               <>
-                <Icon name={issueIcon.name} color={issueIcon.color} />
+                <Icon {...(getIssueTypeIcon(issueType.id) as any)} />
+                {issueType.label}
+              </>
+            ),
+          });
+        }
+        const prepareData = data.map((issueType) => {
+          const issueIcon = getIssueTypeIcon(issueType.id);
+          return {
+            value: issueType._id,
+            label: (
+              <>
+                <Icon {...(issueIcon as any)} />
                 {issueType.label}
               </>
             ),
@@ -80,7 +127,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
       if (success) {
         const prepareData = data.map((user) => {
           return {
-            value: user.email,
+            value: user._id,
             label: (
               <>
                 {user.firstname} {user.lastname || ""}
@@ -92,41 +139,117 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
       }
     };
     fetchAssignees();
+
+    const fetchPriorities = async () => {
+      const { data, success } = await getPriorities();
+      setPrioritiesLoading(false);
+      if (success) {
+        const priority = data.find((prio) => prio.id === "medium");
+        if (priority) {
+          setPriorityLabel({
+            value: priority._id,
+            label: (
+              <>
+                <Icon {...(getPriorityIcon(priority.id) as any)} />
+                {priority.label}
+              </>
+            ),
+          });
+        }
+        const prepareData = data.map((priority) => {
+          const priorityIcon = getPriorityIcon(priority.id);
+          return {
+            value: priority._id,
+            label: (
+              <>
+                <Icon {...(priorityIcon as any)} />
+                {priority.label}
+              </>
+            ),
+          };
+        });
+        setPriorites(prepareData);
+      }
+    };
+    fetchPriorities();
+
+    const fetchKanbanTypes = async () => {
+      const { data, success } = await getKanbanTypes();
+      if (success) {
+        setKanbanTypes(data);
+      }
+    };
+    fetchKanbanTypes();
   }, [isOpen]);
 
   const ProjectSelect = () => (
     <Select
+      onChange={(value) => setProjectLabel(value)}
       isLoading={projectsAreLoading}
       isClearable
       isSearchable
       name="project"
       id="project"
-      defaultValue={projects[0]}
+      value={projectLabel}
       options={projects}
+      placeholder=""
+      tabIndex="1"
     />
   );
 
   const IssueTypeSelect = () => (
     <Select
+      onChange={(value) => setIssueTypeLabel(value)}
       isLoading={issueTypesAreLoading}
       isClearable
       isSearchable
       name="issueType"
       id="issueType"
-      defaultValue={issueTypes[0]}
+      value={issueTypeLabel}
       options={issueTypes}
+      placeholder=""
     />
   );
 
   const AssigneeSelect = () => (
     <Select
+      onChange={(value) => setAssigneeLabel(value)}
       isLoading={assigneesAreLoading}
       isClearable
       isSearchable
       name="assignee"
       id="assignee"
-      defaultValue={assignees[0]}
       options={assignees}
+      placeholder="Automatic"
+      value={assigneeLabel}
+    />
+  );
+
+  const PrioritySelect = () => (
+    <Select
+      onChange={(value) => setPriorityLabel(value)}
+      value={priorityLabel}
+      isLoading={prioritiesAreLoading}
+      isClearable
+      isSearchable
+      name="priority"
+      id="priority"
+      options={priorities}
+      placeholder=""
+    />
+  );
+
+  const EpicSelect = () => (
+    <Select
+      onChange={({ value }) => setEpicId(value)}
+      isLoading={epicsAreLoading}
+      isClearable
+      isSearchable
+      name="epicLink"
+      id="epicLink"
+      defaultValue={epics[0]}
+      options={epics}
+      placeholder=""
     />
   );
 
@@ -137,40 +260,73 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
         <Modal.Description>
           <Form onSubmit={handleSubmit}>
             <Form.Field
+              id="project"
+              name="project"
               control={ProjectSelect}
-              label="Project"
+              label={{ children: "Project", htmlFor: "project" }}
               required
               width="4"
             />
             <Form.Field
+              id="issueType"
+              name="issueType"
               control={IssueTypeSelect}
               label="Issue Type"
               required
               width="4"
             />
             <Form.Input
+              id="summary"
+              name="summary"
               fluid
               onChange={(event) => setSummary(event.target.value)}
-              label="Summary"
+              label={{ children: "Summary", htmlFor: "summary" }}
               required
               value={summary}
             />
             <Form.TextArea
+              id="description"
+              name="description"
               onChange={(_, { value }) => setDescription(value as string)}
-              label="Description"
+              label={{ children: "Description", htmlFor: "description" }}
               value={description}
+              rows="8"
             />
-            <Form.Field control={AssigneeSelect} label="Assignee" width="6" />
+            <Form.Field
+              id="assignee"
+              name="assignee"
+              control={AssigneeSelect}
+              label={{ children: "Assignee", htmlFor: "assignee" }}
+              width="6"
+            />
+            <Button onClick={assignMeHandler} type="button" size="mini">
+              Assign to me
+            </Button>
+            <Form.Field
+              id="priority"
+              name="priority"
+              control={PrioritySelect}
+              label={{ children: "Priority", htmlFor: "priority" }}
+              width="3"
+            />
+            <Form.Field
+              id="epicLink"
+              name="epicLink"
+              control={EpicSelect}
+              label={{ children: "Epic Link", htmlFor: "epicLink" }}
+              width="6"
+            />
+
             <Message
               error
-              header="Project could not be created"
+              header="Issue could not be created"
               visible={error}
             />
             <Button color="green" type="submit" floated="right" className="mb">
               Create
             </Button>
           </Form>
-          <Button basic color="red" onClick={() => handleClose()}>
+          <Button basic color="red" onClick={() => handleClose()} type="button">
             Cancel
           </Button>
         </Modal.Description>

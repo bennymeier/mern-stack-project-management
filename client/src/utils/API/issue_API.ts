@@ -6,7 +6,9 @@ export interface Issue {
   issueTypeId: string;
   assigneeId: string;
   priorityId: string;
+  statusId: string;
   epicId: string;
+  index: number;
   summary: string;
   description: string;
   _id: string;

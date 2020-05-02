@@ -21,7 +21,7 @@ const createIssue = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      error: error.errmsg,
+      error: error,
       message: "Issue not created!",
     });
   }
@@ -57,9 +57,7 @@ const deleteIssue = async (req, res) => {
     const issue = await Issue.findOneAndDelete({ _id: req.params.id });
 
     if (!issue) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Issue not found` });
+      return res.status(404).json({ success: false, error: `Issue not found` });
     }
 
     return res.status(200).json({ success: true, id: issue._id });
@@ -73,9 +71,7 @@ const getIssueById = async (req, res) => {
     const issue = await Issue.findOne({ _id: req.params.id });
 
     if (!issue) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Issue not found` });
+      return res.status(404).json({ success: false, error: `Issue not found` });
     }
 
     return res.status(200).json({ success: true, data: issue });
@@ -86,7 +82,7 @@ const getIssueById = async (req, res) => {
 
 const getIssues = async (req, res) => {
   try {
-    const issues = await Issue.find({});
+    const issues = await Issue.find({}).sort({ index: "asc" });
 
     if (!issues.length) {
       return res

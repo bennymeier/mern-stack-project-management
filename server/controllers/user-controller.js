@@ -14,7 +14,9 @@ const createUser = async (req, res) => {
 
   const user = await User.findOne({ email: req.body.email });
   if (user) {
-    return res.status(400).json({ email: "Email already exists" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Email already exists" });
   } else {
     const newUser = new User(req.body);
     // Hash password before saving in database
@@ -127,7 +129,7 @@ const loginUser = (req, res) => {
         // User matched
         // Create JWT Payload
         const payload = {
-          id: user.id,
+          _id: user.id,
           firstname: user.firstname,
           lastname: user.lastname,
           email: user.email,
