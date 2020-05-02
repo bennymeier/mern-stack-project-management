@@ -56,9 +56,11 @@ const ProjectsTable: React.FC<ProjectsTable> = (props) => {
               <Table.Cell>
                 <Icon
                   color={
-                    favoriteProjects.includes(project._id)
-                      ? "yellow"
-                      : undefined
+                    favoriteProjects
+                      ? favoriteProjects.includes(project._id)
+                        ? "yellow"
+                        : undefined
+                      : null
                   }
                   className="pointer"
                   name="star outline"

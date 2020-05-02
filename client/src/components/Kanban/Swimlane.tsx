@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "semantic-ui-react";
 import "./style.css";
 import { getIssues, Issue, updateIssue } from "../../utils/API/issue_API";
 import {
@@ -11,11 +10,18 @@ import {
   DraggableLocation,
 } from "react-beautiful-dnd";
 import { KanbanType, getKanbanTypes } from "../../utils/API/kanbantype_API";
+import { connect } from "react-redux";
+import { AppState } from "../../redux";
+import { User } from "../../utils/API/user_API";
 
+export interface SwimlaneProps {
+  filterMyIssues: boolean;
+  currentUser: User;
+}
 export interface SwimlaneState {
   kanbanTypes: KanbanType[];
 }
-class Swimlane extends React.Component<{}, SwimlaneState> {
+class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
   state: any = {
     kanbanTypes: [],
   };
@@ -25,22 +31,48 @@ class Swimlane extends React.Component<{}, SwimlaneState> {
     if (success) {
       const kanbanTypes = data.map((type) => type._id);
       const { data: issues, success: isSuccess } = await getIssues();
-      let state = {};
-      kanbanTypes.forEach((id) => {
-        state = {
-          ...state,
-          [id]: issues.filter(
-            (issue) => issue.statusId === "" || issue.statusId === id
-          ),
-        };
-      });
-      this.setState({ kanbanTypes: data, ...state });
+      if (isSuccess) {
+        let state = {};
+        kanbanTypes.forEach((id) => {
+          state = {
+            ...state,
+            [id]: issues.filter(
+              (issue) => issue.statusId === "" || issue.statusId === id
+            ),
+          };
+        });
+        this.setState({ kanbanTypes: data, ...state });
+      }
     }
   };
 
   componentDidMount() {
     this.fetchIssuesAndKanbanTypes();
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.filterMyIssues) {
+      this.filterMyIssues();
+      console.log("FILTER");
+    } else {
+      console.log("UNFILTER");
+    }
+  }
+
+  filterMyIssues = () => {
+    const { currentUser } = this.props;
+    let state = {};
+    (this.state.kanbanTypes as KanbanType[]).forEach((type) => {
+      state = {
+        ...state,
+        [type._id]: this.state[type._id].filter(
+          (issue: Issue) =>
+            issue.creatorId === currentUser._id || issue.assigneeId
+        ),
+      };
+    });
+    this.setState({ ...state }, () => console.log(this.state));
+  };
 
   move = (
     source: any,
@@ -81,14 +113,14 @@ class Swimlane extends React.Component<{}, SwimlaneState> {
     ...draggableStyle,
   });
 
-  onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+  onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     const { droppableId: sourceDropId } = source;
-    const { droppableId: destinationDropId } = destination;
     // dropped outside the list
     if (!destination) {
       return;
     }
+    const { droppableId: destinationDropId } = destination;
 
     if (sourceDropId === destinationDropId) {
       const items = this.reorder(
@@ -297,4 +329,7 @@ class Swimlane extends React.Component<{}, SwimlaneState> {
   }
 }
 
-export default Swimlane;
+const mapStateToProps = (state: AppState) => ({
+  currentUser: state.auth.user,
+});
+export default connect(mapStateToProps)(Swimlane);
