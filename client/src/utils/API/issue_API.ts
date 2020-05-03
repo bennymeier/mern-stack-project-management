@@ -59,6 +59,17 @@ export const getIssues = async (): Promise<GetIssues> => {
   }
 };
 
+export const getIssuesByProjectId = async (
+  projectId: string
+): Promise<GetIssues> => {
+  try {
+    const { data } = await API.get(`/issues/project/${projectId}`);
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
 export interface UpdateIssue {
   success: boolean;
   message: string;

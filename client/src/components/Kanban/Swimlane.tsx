@@ -1,36 +1,52 @@
 import React from "react";
 import "./style.css";
-import { getIssues, Issue, updateIssue } from "../../utils/API/issue_API";
+import {
+  getIssues,
+  Issue,
+  updateIssue,
+  getIssuesByProjectId,
+} from "../../utils/API/issue_API";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
-  ResponderProvided,
   DraggableLocation,
 } from "react-beautiful-dnd";
 import { KanbanType, getKanbanTypes } from "../../utils/API/kanbantype_API";
 import { connect } from "react-redux";
 import { AppState } from "../../redux";
 import { User } from "../../utils/API/user_API";
+import { Project } from "../../utils/API/project_API";
+import EditModal from "../Issue/EditModal";
 
 export interface SwimlaneProps {
   filterMyIssues: boolean;
   currentUser: User;
+  currentProject: Project;
 }
 export interface SwimlaneState {
   kanbanTypes: KanbanType[];
+  filterMyIssues: boolean;
+  showEditModal: boolean;
+  currentIssueId: string;
 }
 class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
-  state: any = {
+  state: SwimlaneState = {
     kanbanTypes: [],
+    filterMyIssues: false,
+    showEditModal: false,
+    currentIssueId: null,
   };
 
   fetchIssuesAndKanbanTypes = async () => {
+    const { currentProject } = this.props;
     const { data, success } = await getKanbanTypes();
     if (success) {
       const kanbanTypes = data.map((type) => type._id);
-      const { data: issues, success: isSuccess } = await getIssues();
+      const { data: issues, success: isSuccess } = await getIssuesByProjectId(
+        currentProject._id
+      );
       if (isSuccess) {
         let state = {};
         kanbanTypes.forEach((id) => {
@@ -46,19 +62,11 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
     }
   };
 
-  componentDidMount() {
-    this.fetchIssuesAndKanbanTypes();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.filterMyIssues) {
-      this.filterMyIssues();
-      console.log("FILTER");
-    } else {
-      console.log("UNFILTER");
+  componentDidUpdate(nextProps) {
+    if (this.props.currentProject !== nextProps.currentProject) {
+      this.fetchIssuesAndKanbanTypes();
     }
   }
-
   filterMyIssues = () => {
     const { currentUser } = this.props;
     let state = {};
@@ -100,6 +108,8 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
+    console.log("RES ", result);
+
     return result;
   };
 
@@ -157,10 +167,27 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
     }
   };
 
+  handleEdit = (issueId: string) => {
+    this.setState({ showEditModal: true, currentIssueId: issueId });
+  };
+
+  handleClose = () => {
+    this.setState({ showEditModal: !this.state.showEditModal });
+  };
+
   render() {
-    const { kanbanTypes } = this.state;
+    const { kanbanTypes, showEditModal, currentIssueId } = this.state;
+    const { currentUser } = this.props;
     return (
       <>
+        {showEditModal && (
+          <EditModal
+            handleClose={this.handleClose}
+            issueId={currentIssueId}
+            isOpen={showEditModal}
+            currentUser={currentUser}
+          />
+        )}
         {!!kanbanTypes.length && (
           <DragDropContext onDragEnd={this.onDragEnd}>
             <div className="drag-container">
@@ -184,6 +211,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
                           >
                             {(provided, snapshot) => (
                               <li
+                                onClick={() => this.handleEdit(issue._id)}
                                 className="drag-item"
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
@@ -331,5 +359,6 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
 
 const mapStateToProps = (state: AppState) => ({
   currentUser: state.auth.user,
+  currentProject: state.currentProject,
 });
 export default connect(mapStateToProps)(Swimlane);

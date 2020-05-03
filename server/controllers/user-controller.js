@@ -73,23 +73,20 @@ const getUserByMail = async (req, res) => {
       return res.status(404).json({ success: false, error: `User not found` });
     }
     return res.status(200).json({ success: true, data: user });
-  } catch (err) {
-    return res.status(400).json({ success: false, error: err });
+  } catch (error) {
+    return res.status(400).json({ success: false, error });
   }
 };
 
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    if (!users.length) {
-      return res.status(404).json({ success: false, error: `Users not found` });
-    }
     return res.status(200).json({
       success: true,
       data: users,
     });
-  } catch (err) {
-    return res.status(400).json({ success: false, error: err });
+  } catch (error) {
+    return res.status(400).json({ success: false, error });
   }
 };
 

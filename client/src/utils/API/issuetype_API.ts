@@ -4,6 +4,8 @@ export type IssueTypeIds = "bug" | "epic" | "story" | "task";
 export interface IssueType {
   id: IssueTypeIds;
   label: string;
+  color?: string;
+  icon?: string;
   _id: string;
   createdAt: string;
   updatedAt: string;
@@ -14,7 +16,7 @@ export interface CreateIssueType {
   error: string;
   data: IssueType;
 }
-export const createIssue = async (
+export const createIssueType = async (
   issuetype: Partial<IssueType>
 ): Promise<CreateIssueType> => {
   try {
@@ -56,7 +58,7 @@ export interface UpdateIssueType {
   success: boolean;
   message: string;
 }
-export const updateIssue = async (
+export const updateIssueType = async (
   id: string,
   issuetype: Partial<IssueType>
 ): Promise<UpdateIssueType> => {

@@ -87,13 +87,6 @@ const getProjectByKey = async (req, res) => {
 const getProjects = async (req, res) => {
   try {
     const projects = await Project.find({});
-
-    if (!projects.length) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Projects not found` });
-    }
-
     return res.status(200).json({ success: true, data: projects });
   } catch (error) {
     return res.status(400).json({ success: false, error });

@@ -76,8 +76,8 @@
 .drag-inner-list {
     min-height: 50px;
     background-color: rgb(235, 236, 240);
-    -webkit-transition: background-color 0.2s ease 0s, opacity 0.1s ease 0s;
-    transition: background-color 0.2s ease 0s, opacity 0.1s ease 0s;
+    -webkit-transition: background-color 0.2s ease 0s;
+    transition: background-color 0.2s ease 0s;
 }
 
 .drag-item {

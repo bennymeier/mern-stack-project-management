@@ -87,13 +87,6 @@ const getIssueTypeById = async (req, res) => {
 const getIssueTypes = async (req, res) => {
   try {
     const issues = await IssueType.find({});
-
-    if (!issues.length) {
-      return res
-        .status(404)
-        .json({ success: false, error: `IssueTypes not found` });
-    }
-
     return res.status(200).json({ success: true, data: issues });
   } catch (error) {
     return res.status(400).json({ success: false, error });

@@ -96,10 +96,22 @@ const getIssues = async (req, res) => {
   }
 };
 
+const getIssuesByProjectId = async (req, res) => {
+  try {
+    const issues = await Issue.find({ projectId: req.params.id }).sort({
+      index: "asc",
+    });
+    return res.status(200).json({ success: true, data: issues });
+  } catch (error) {
+    return res.status(400).json({ success: false, error });
+  }
+};
+
 module.exports = {
   createIssue,
   updateIssue,
   deleteIssue,
   getIssueById,
   getIssues,
+  getIssuesByProjectId,
 };

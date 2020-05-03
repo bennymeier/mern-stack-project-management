@@ -1,0 +1,18 @@
+.edit-header {
+    display: flex !important;
+}
+
+.edit-header .issue-type-select>div {
+    border: none;
+}
+
+.edit-header .issue-type-select {
+    margin-right: .6em;
+}
+
+.edit-header .issue-type-select>div:hover {
+    background-color: rgb(244, 245, 247);
+    color: rgb(23, 43, 77);
+    -webkit-transition: background-color 0.2s ease 0s;
+    transition: background-color 0.2s ease 0s;
+}

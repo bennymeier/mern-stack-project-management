@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const token = localStorage.getItem("jwtToken");
 export const API = axios.create({
   baseURL: "http://localhost:1337/api",
   responseType: "json",
+  headers: { Authorization: `${token}` },
 });
 
 export interface Room {
@@ -194,4 +196,3 @@ export const createMessage = async (
     return err;
   }
 };
-

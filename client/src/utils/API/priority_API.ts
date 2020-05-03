@@ -4,6 +4,8 @@ export type PriorityIds = "highest" | "high" | "medium" | "low" | "lowest";
 export interface Priority {
   id: PriorityIds;
   label: string;
+  color?: string;
+  icon?: string;
   _id: string;
   createdAt: string;
   updatedAt: string;

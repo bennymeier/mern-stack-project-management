@@ -2,6 +2,8 @@ import { API } from "./API";
 
 export interface KanbanType {
   label: string;
+  color?: string;
+  icon?: string;
   _id: string;
   createdAt: string;
   updatedAt: string;

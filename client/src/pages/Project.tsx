@@ -8,8 +8,14 @@ import {
 import ProjectBreadcrumb from "../components/Breadcrumb/ProjectBreadcrumb";
 import ProjectHeader from "../components/Project/ProjectHeader";
 import ProjectContent from "../components/Project/ProjectContent";
+import { connect } from "react-redux";
+import { setCurrentProject } from "../redux/project/actions";
 
-const Project = () => {
+export interface ProjectProps {
+  setCurrentProject: typeof setCurrentProject;
+}
+const Project: React.FC<ProjectProps> = (props) => {
+  const { setCurrentProject } = props;
   const { id } = useParams();
   const [project, setProject] = useState<ProjectTypes>();
   const [isLoading, setLoading] = useState(true);
@@ -19,6 +25,7 @@ const Project = () => {
       if (success) {
         setLoading(false);
         setProject(data);
+        setCurrentProject(data);
       }
     };
     fetchProject();
@@ -37,4 +44,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default connect(null, { setCurrentProject })(Project);

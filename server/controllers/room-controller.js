@@ -101,15 +101,12 @@ const getRoomById = async (req, res) => {
 };
 
 const getRooms = async (req, res) => {
-  await Room.find({}, (err, rooms) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-    if (!rooms.length) {
-      return res.status(404).json({ success: false, error: `Room not found` });
-    }
+  try {
+    const rooms = await Room.find({});
     return res.status(200).json({ success: true, data: rooms });
-  }).catch((err) => console.log(err));
+  } catch (error) {
+    return res.status(400).json({ success: false, error });
+  }
 };
 
 module.exports = {

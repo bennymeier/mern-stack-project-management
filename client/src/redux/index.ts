@@ -6,12 +6,14 @@ import { chatReducer } from "./chat/reducers";
 import { authReducer } from "./auth/reducers";
 import { errorReducer } from "./error/reducers";
 import { usersReducer } from "./users/reducers";
+import { projectReducer } from "./project/reducers";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   chat: chatReducer,
   errors: errorReducer,
   users: usersReducer,
+  currentProject: projectReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
@@ -19,6 +21,7 @@ export type AppState = ReturnType<typeof rootReducer>;
 export const configureStore = () => {
   const middlewares = [thunkMiddleware, createLogger()];
   const middleWareEnhancer = applyMiddleware(...middlewares);
+
   const store = createStore(
     rootReducer,
     composeWithDevTools(middleWareEnhancer)

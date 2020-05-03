@@ -134,17 +134,12 @@ const getAvatarById = async (req, res) => {
     .json({ success: false, message: "Route not implemented." });
 };
 const getAvatars = async (req, res) => {
-  await UserAvatar.find({}, (err, avatars) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-    if (!avatars.length) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Avatars not found` });
-    }
+  try {
+    const avatars = await UserAvatar.find({});
     return res.status(200).json({ success: true, data: avatars });
-  }).catch((err) => console.log(err));
+  } catch (error) {
+    return res.status(400).json({ success: false, error: err });
+  }
 };
 
 module.exports = {

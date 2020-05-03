@@ -87,13 +87,6 @@ const getPriorityById = async (req, res) => {
 const getPriorities = async (req, res) => {
   try {
     const priorities = await Priority.find({});
-
-    if (!priorities.length) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Priorities not found` });
-    }
-
     return res.status(200).json({ success: true, data: priorities });
   } catch (error) {
     return res.status(400).json({ success: false, error });

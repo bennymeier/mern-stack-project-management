@@ -89,13 +89,6 @@ const getKanbanTypeById = async (req, res) => {
 const getKanbanTypes = async (req, res) => {
   try {
     const kanbanTypes = await KanbanType.find({});
-
-    if (!kanbanTypes.length) {
-      return res
-        .status(404)
-        .json({ success: false, error: `Kanban types not found` });
-    }
-
     return res.status(200).json({ success: true, data: kanbanTypes });
   } catch (error) {
     return res.status(400).json({ success: false, error });

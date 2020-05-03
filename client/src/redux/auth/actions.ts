@@ -41,12 +41,12 @@ export const loginUser = (userData: LoginData) => (dispatch: any) => {
       // Set current user
       dispatch(setCurrentUser(decoded));
     })
-    .catch((err) =>
+    .catch((err) => {
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,
-      })
-    );
+      });
+    });
 };
 
 // Set logged in user
@@ -70,6 +70,6 @@ export const logoutUser = () => (dispatch: any) => {
   localStorage.removeItem("jwtToken");
   // Remove auth header for future requests
   setAuthToken("");
-  // Set current user to empty object {} which will set isAuthenticated to false
-  dispatch(setCurrentUser({} as any));
+  // Set current user to null which will set isAuthenticated to false
+  dispatch(setCurrentUser(null));
 };

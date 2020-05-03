@@ -39,10 +39,6 @@ export const getProject = async (id: string): Promise<GetProject> => {
   }
 };
 
-export interface GetProject {
-  success: boolean;
-  data: Project;
-}
 export const getProjectByKey = async (key: string): Promise<GetProject> => {
   try {
     const { data } = await API.get(`/project/${key}`);

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "semantic-ui-react";
 import ProjectSearch from "./Search";
 import Swimlane from "../Kanban/Swimlane";
 
 export interface ProjectContentProps {}
-const ProjectContent: React.FC<ProjectContentProps> = (props) => {
-  const [filterMyIssues, setFilterMyIssues] = useState(false);
+const ProjectContent: React.FC<ProjectContentProps> = () => {
+  const [filterMyIssues, setFilterMyIssues] = useState<boolean>();
+  useEffect(() => setFilterMyIssues(filterMyIssues), [filterMyIssues]);
   return (
     <>
       <div className="project-content">
@@ -14,7 +15,13 @@ const ProjectContent: React.FC<ProjectContentProps> = (props) => {
             <ProjectSearch />
           </li>
           <li>
-            <Button onClick={() => setFilterMyIssues(!filterMyIssues)}>
+            <Button
+              onClick={() =>
+                // @ts-ignore
+                setFilterMyIssues(!filterMyIssues) ||
+                console.log(!filterMyIssues)
+              }
+            >
               Only My Issues
             </Button>
           </li>
@@ -27,5 +34,4 @@ const ProjectContent: React.FC<ProjectContentProps> = (props) => {
     </>
   );
 };
-
 export default ProjectContent;

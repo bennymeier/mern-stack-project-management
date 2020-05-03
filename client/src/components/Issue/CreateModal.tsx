@@ -5,7 +5,6 @@ import { User, getUsers } from "../../utils/API/user_API";
 import Select from "react-select";
 import { Issue, createIssue } from "../../utils/API/issue_API";
 import { getIssueTypes } from "../../utils/API/issuetype_API";
-import { getIssueTypeIcon, getPriorityIcon } from "../../utils/helpers";
 import { getPriorities } from "../../utils/API/priority_API";
 import { KanbanType, getKanbanTypes } from "../../utils/API/kanbantype_API";
 
@@ -98,19 +97,24 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
             value: issueType._id,
             label: (
               <>
-                <Icon {...(getIssueTypeIcon(issueType.id) as any)} />
+                <Icon
+                  name={issueType.icon as any}
+                  color={issueType.color as any}
+                />
                 {issueType.label}
               </>
             ),
           });
         }
         const prepareData = data.map((issueType) => {
-          const issueIcon = getIssueTypeIcon(issueType.id);
           return {
             value: issueType._id,
             label: (
               <>
-                <Icon {...(issueIcon as any)} />
+                <Icon
+                  name={issueType.icon as any}
+                  color={issueType.color as any}
+                />
                 {issueType.label}
               </>
             ),
@@ -150,19 +154,24 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
             value: priority._id,
             label: (
               <>
-                <Icon {...(getPriorityIcon(priority.id) as any)} />
+                <Icon
+                  name={priority.icon as any}
+                  color={priority.color as any}
+                />
                 {priority.label}
               </>
             ),
           });
         }
         const prepareData = data.map((priority) => {
-          const priorityIcon = getPriorityIcon(priority.id);
           return {
             value: priority._id,
             label: (
               <>
-                <Icon {...(priorityIcon as any)} />
+                <Icon
+                  name={priority.icon as any}
+                  color={priority.color as any}
+                />
                 {priority.label}
               </>
             ),
@@ -186,7 +195,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
     <Select
       onChange={(value) => setProjectLabel(value)}
       isLoading={projectsAreLoading}
-      isClearable
+      isClearable={false}
       isSearchable
       name="project"
       id="project"
@@ -201,7 +210,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
     <Select
       onChange={(value) => setIssueTypeLabel(value)}
       isLoading={issueTypesAreLoading}
-      isClearable
+      isClearable={false}
       isSearchable
       name="issueType"
       id="issueType"
@@ -230,7 +239,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
       onChange={(value) => setPriorityLabel(value)}
       value={priorityLabel}
       isLoading={prioritiesAreLoading}
-      isClearable
+      isClearable={false}
       isSearchable
       name="priority"
       id="priority"

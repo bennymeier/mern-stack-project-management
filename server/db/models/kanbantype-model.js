@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const KanbanTypes = new Schema(
   {
     label: { type: String, required: true },
+    color: { type: String },
+    icon: { type: String },
   },
   { timestamps: true }
 );
