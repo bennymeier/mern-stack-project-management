@@ -3,9 +3,7 @@
 }
 
 .drag-list {
-    display: -webkit-box;
     display: flex;
-    -webkit-box-align: start;
     align-items: flex-start;
 }
 
@@ -22,7 +20,6 @@
 }
 
 .drag-column {
-    -webkit-box-flex: 1;
     flex: 1;
     margin: 0 10px;
     position: relative;
@@ -64,11 +61,8 @@
 }
 
 .drag-column-header {
-    display: -webkit-box;
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
-    -webkit-box-pack: justify;
     justify-content: space-between;
     padding: 10px;
 }
@@ -76,7 +70,6 @@
 .drag-inner-list {
     min-height: 50px;
     background-color: rgb(235, 236, 240);
-    -webkit-transition: background-color 0.2s ease 0s;
     transition: background-color 0.2s ease 0s;
 }
 
@@ -92,16 +85,15 @@
     -ms-user-select: none;
     user-select: none;
     color: rgb(9, 30, 66);
-    display: -webkit-box;
     display: flex;
     border-radius: 2px;
     border-width: 2px;
     border-style: solid;
-    -webkit-border-image: initial;
     -o-border-image: initial;
     border-image: initial;
     border-color: transparent;
-    padding: 8px
+    padding: 8px;
+    display: grid;
 }
 
 .drag-item:focus {
@@ -110,8 +102,38 @@
     border-color: rgba(9, 30, 66, 0.71);
 }
 
+.drag-item:hover {
+    background-color: #EBECF0;
+}
+
+.drag-item .top {
+    display: block;
+    box-sizing: content-box;
+    line-height: 1.42857143;
+    max-height: 4.28571429em;
+    overflow: hidden;
+}
+
+.drag-item .bottom .container {
+    margin-right: 5px;
+    flex: 1 0 auto;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 10px;
+}
+
+.drag-item .bottom {
+    display: flex;
+    flex-wrap: nowrap;
+    -ms-justify-content: space-between;
+    justify-content: space-between;
+    margin-top: 0;
+    overflow: hidden;
+}
+
 .drag-item.is-moving {
-    -webkit-transform: scale(1.5);
     transform: scale(1.5);
     background: rgba(0, 0, 0, 0.8);
 }

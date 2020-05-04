@@ -1,5 +1,14 @@
 import React from "react";
-import { Button, Form, Modal, Message, Icon, Grid } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Modal,
+  Message,
+  Icon,
+  Grid,
+  Dimmer,
+  Loader,
+} from "semantic-ui-react";
 import { getProjects, Project } from "../../utils/API/project_API";
 import { User, getUsers } from "../../utils/API/user_API";
 import Select from "react-select";
@@ -48,6 +57,7 @@ export interface EditModalState {
   summary: string;
   description: string;
   error: boolean;
+  isLoading: boolean;
 }
 class EditModal extends React.Component<EditModalProps, EditModalState> {
   state: EditModalState = {
@@ -79,6 +89,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
     projectsAreLoading: true,
     projectsSelect: [],
     isOpen: this.props.isOpen,
+    isLoading: true,
   };
   handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -140,6 +151,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
         summary,
         description,
         projectId,
+        isLoading: false,
         issueTypeLabel: this.createIssueTypeLabel(issueType),
         projectLabel: this.createProjectLabel(project),
         assigneeLabel: this.createAssigneeLabel(user),
@@ -149,6 +161,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
   };
 
   createProjectLabel = (project: Project) => {
+    if (!project) return;
     return {
       value: project._id,
       label: `${project.name} (${project.key})`,
@@ -171,6 +184,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
   };
 
   createIssueTypeLabel = (issueType: IssueType) => {
+    if (!issueType) return;
     return {
       id: issueType.id,
       value: issueType._id,
@@ -199,6 +213,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
   };
 
   createAssigneeLabel = (user: User) => {
+    if (!user) return;
     return {
       value: user._id,
       label: (
@@ -219,6 +234,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
   };
 
   createPriorityLabel = (priority: Priority) => {
+    if (!priority) return;
     return {
       id: priority.id,
       value: priority._id,
@@ -415,101 +431,112 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
     }
   };
 
-  handleClose = () =>
+  handleClose = () => {
     this.setState({ isOpen: !this.state.isOpen }, this.props.handleClose);
-  render() {
-    const { currentIssue, isOpen } = this.state;
-    return (
-      <Modal
-        open={isOpen}
-        size="large"
-        centered
-        closeOnEscape
-        onClose={this.handleClose}
-      >
-        <Modal.Header className="edit-header">
-          <Form.Field
-            id="issueType"
-            name="issueType"
-            control={this.IssueTypeSelect}
-            required
-          />
-          <div>
-            <h1>{currentIssue?.summary}</h1>
-          </div>
-        </Modal.Header>
-        <Modal.Content>
-          <Modal.Description>
-            <Form onSubmit={this.handleSubmit}>
-              <Grid columns="2" stackable>
-                <Grid.Column width="10">
-                  <Form.Input
-                    label={{ children: "Summary", htmlFor: "summary" }}
-                    id="summary"
-                    name="summary"
-                    fluid
-                    onChange={(event) =>
-                      this.setState({ summary: event.target.value })
-                    }
-                    onBlur={(event) => this.handleBlur(event)}
-                    required
-                    value={this.state.summary}
-                    focus
-                  />
-                  <Form.TextArea
-                    id="description"
-                    name="description"
-                    onChange={(_, { value }) =>
-                      this.setState({ description: value as string })
-                    }
-                    onBlur={(event) => this.handleBlur(event)}
-                    label={{
-                      children: "Description",
-                      htmlFor: "description",
-                    }}
-                    rows="10"
-                    value={this.state.description}
-                  />
-                </Grid.Column>
-                <Grid.Column width="6">
-                  <Form.Field
-                    id="assignee"
-                    name="assignee"
-                    control={this.AssigneeSelect}
-                    label={{ children: "Assignee", htmlFor: "assignee" }}
-                  />
-                  <Form.Field
-                    id="priority"
-                    name="priority"
-                    control={this.PrioritySelect}
-                    label={{ children: "Priority", htmlFor: "priority" }}
-                  />
-                  <Form.Field
-                    id="epicLink"
-                    name="epicLink"
-                    control={this.EpicSelect}
-                    label={{ children: "Epic Link", htmlFor: "epicLink" }}
-                  />
-                </Grid.Column>
-              </Grid>
+  };
 
-              <Message
-                error
-                header="Issue could not be created"
-                visible={this.state.error}
+  render() {
+    const { currentIssue, isOpen, isLoading } = this.state;
+    return (
+      <>
+        {isLoading && (
+          <Dimmer active>
+            <Loader content="Loading" />
+          </Dimmer>
+        )}
+        {!isLoading && (
+          <Modal
+            open={isOpen}
+            size="large"
+            centered
+            closeOnEscape
+            onClose={this.handleClose}
+          >
+            <Modal.Header className="edit-header">
+              <Form.Field
+                id="issueType"
+                name="issueType"
+                control={this.IssueTypeSelect}
+                required
               />
-            </Form>
-            <Button
-              basic
-              color="red"
-              onClick={this.props.handleClose}
-              type="button"
-            >
-              Cancel
-            </Button>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
+              <div>
+                <h1>{currentIssue?.summary}</h1>
+              </div>
+            </Modal.Header>
+            <Modal.Content>
+              <Modal.Description>
+                <Form onSubmit={this.handleSubmit}>
+                  <Grid columns="2" stackable>
+                    <Grid.Column width="10">
+                      <Form.Input
+                        label={{ children: "Summary", htmlFor: "summary" }}
+                        id="summary"
+                        name="summary"
+                        fluid
+                        onChange={(event) =>
+                          this.setState({ summary: event.target.value })
+                        }
+                        onBlur={(event) => this.handleBlur(event)}
+                        required
+                        value={this.state.summary}
+                        focus
+                      />
+                      <Form.TextArea
+                        id="description"
+                        name="description"
+                        onChange={(_, { value }) =>
+                          this.setState({ description: value as string })
+                        }
+                        onBlur={(event) => this.handleBlur(event)}
+                        label={{
+                          children: "Description",
+                          htmlFor: "description",
+                        }}
+                        rows="10"
+                        value={this.state.description}
+                      />
+                    </Grid.Column>
+                    <Grid.Column width="6">
+                      <Form.Field
+                        id="assignee"
+                        name="assignee"
+                        control={this.AssigneeSelect}
+                        label={{ children: "Assignee", htmlFor: "assignee" }}
+                      />
+                      <Form.Field
+                        id="priority"
+                        name="priority"
+                        control={this.PrioritySelect}
+                        label={{ children: "Priority", htmlFor: "priority" }}
+                      />
+                      <Form.Field
+                        id="epicLink"
+                        name="epicLink"
+                        control={this.EpicSelect}
+                        label={{ children: "Epic Link", htmlFor: "epicLink" }}
+                      />
+                    </Grid.Column>
+                  </Grid>
+
+                  <Message
+                    error
+                    header="Issue could not be created"
+                    visible={this.state.error}
+                  />
+                </Form>
+                <Button
+                  basic
+                  color="red"
+                  onClick={this.props.handleClose}
+                  type="button"
+                >
+                  Cancel
+                </Button>
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
+        )}
+      </>
     );
   }
 }

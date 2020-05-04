@@ -1,7 +1,6 @@
 import React from "react";
 import "./style.css";
 import {
-  getIssues,
   Issue,
   updateIssue,
   getIssuesByProjectId,
@@ -19,11 +18,17 @@ import { AppState } from "../../redux";
 import { User } from "../../utils/API/user_API";
 import { Project } from "../../utils/API/project_API";
 import EditModal from "../Issue/EditModal";
+import { IssueType } from "../../utils/API/issuetype_API";
+import { Priority } from "../../utils/API/priority_API";
+import { Icon } from "semantic-ui-react";
+import Row from "./Row";
 
 export interface SwimlaneProps {
   filterMyIssues: boolean;
   currentUser: User;
   currentProject: Project;
+  issueTypes: IssueType[];
+  priorities: Priority[];
 }
 export interface SwimlaneState {
   kanbanTypes: KanbanType[];
@@ -67,6 +72,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
       this.fetchIssuesAndKanbanTypes();
     }
   }
+
   filterMyIssues = () => {
     const { currentUser } = this.props;
     let state = {};
@@ -112,16 +118,6 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
 
     return result;
   };
-
-  getListStyle = (isDraggingOver: boolean) => ({
-    background: isDraggingOver ? "rgb(255, 236, 230)" : "rgb(235, 236, 240)",
-  });
-
-  getItemStyle = (draggableStyle, isDragging: boolean) => ({
-    background: isDragging ? "rgb(227, 252, 239)" : "rgb(255, 255, 255)",
-    borderColor: isDragging ? "unset" : "",
-    ...draggableStyle,
-  });
 
   onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -177,7 +173,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
 
   render() {
     const { kanbanTypes, showEditModal, currentIssueId } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, priorities, issueTypes } = this.props;
     return (
       <>
         {showEditModal && (
@@ -192,7 +188,19 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
           <DragDropContext onDragEnd={this.onDragEnd}>
             <div className="drag-container">
               <ul className="drag-list">
-                <li className="drag-column drag-column-backlog">
+                {this.state.kanbanTypes.map((kanban) => {
+                  return (
+                    <Row
+                      key={kanban._id}
+                      issueTypes={issueTypes}
+                      priorities={priorities}
+                      kanbanType={kanban}
+                      issues={this.state[kanban._id]}
+                      handleEdit={(id) => this.handleEdit(id)}
+                    />
+                  );
+                })}
+                {/* <li className="drag-column drag-column-backlog">
                   <span className="drag-column-header">
                     <h2>Backlog</h2>
                   </span>
@@ -203,29 +211,39 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
                         ref={provided.innerRef}
                         style={this.getListStyle(snapshot.isDraggingOver)}
                       >
-                        {this.state[kanbanTypes[0]._id].map((issue, index) => (
-                          <Draggable
-                            key={issue._id}
-                            draggableId={issue._id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <li
-                                onClick={() => this.handleEdit(issue._id)}
-                                className="drag-item"
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={this.getItemStyle(
-                                  provided.draggableProps.style,
-                                  snapshot.isDragging
-                                )}
-                              >
-                                {issue.summary}
-                              </li>
-                            )}
-                          </Draggable>
-                        ))}
+                        {this.state[kanbanTypes[0]._id].map(
+                          (issue: Issue, index) => (
+                            <Draggable
+                              key={issue._id}
+                              draggableId={issue._id}
+                              index={index}
+                            >
+                              {(provided, snapshot) => (
+                                <li
+                                  onClick={() => this.handleEdit(issue._id)}
+                                  className="drag-item"
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  style={this.getItemStyle(
+                                    provided.draggableProps.style,
+                                    snapshot.isDragging
+                                  )}
+                                >
+                                  <section className="top">
+                                    {issue.summary}
+                                  </section>
+                                  <section className="bottom">
+                                    <div className="container">
+                                      <span>{this.getIssueType(issue)}</span>
+                                      <span>{this.getPriority(issue)}</span>
+                                    </div>
+                                  </section>
+                                </li>
+                              )}
+                            </Draggable>
+                          )
+                        )}
                         {provided.placeholder}
                       </ul>
                     )}
@@ -250,6 +268,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
                           >
                             {(provided, snapshot) => (
                               <li
+                                onClick={() => this.handleEdit(issue._id)}
                                 className="drag-item"
                                 id={issue._id}
                                 ref={provided.innerRef}
@@ -289,6 +308,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
                           >
                             {(provided, snapshot) => (
                               <li
+                                onClick={() => this.handleEdit(issue._id)}
                                 className="drag-item"
                                 id={issue._id}
                                 ref={provided.innerRef}
@@ -328,6 +348,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
                           >
                             {(provided, snapshot) => (
                               <li
+                                onClick={() => this.handleEdit(issue._id)}
                                 className="drag-item"
                                 id={issue._id}
                                 ref={provided.innerRef}
@@ -347,7 +368,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
                       </ul>
                     )}
                   </Droppable>
-                </li>
+                </li>*/}
               </ul>
             </div>
           </DragDropContext>
@@ -360,5 +381,7 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
 const mapStateToProps = (state: AppState) => ({
   currentUser: state.auth.user,
   currentProject: state.currentProject,
+  priorities: state.priorities,
+  issueTypes: state.issueTypes,
 });
 export default connect(mapStateToProps)(Swimlane);

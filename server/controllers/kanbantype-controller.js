@@ -88,7 +88,7 @@ const getKanbanTypeById = async (req, res) => {
 
 const getKanbanTypes = async (req, res) => {
   try {
-    const kanbanTypes = await KanbanType.find({});
+    const kanbanTypes = await KanbanType.find({}).sort({ index: "asc" });
     return res.status(200).json({ success: true, data: kanbanTypes });
   } catch (error) {
     return res.status(400).json({ success: false, error });

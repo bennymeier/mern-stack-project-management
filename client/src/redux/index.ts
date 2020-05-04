@@ -7,6 +7,9 @@ import { authReducer } from "./auth/reducers";
 import { errorReducer } from "./error/reducers";
 import { usersReducer } from "./users/reducers";
 import { projectReducer } from "./project/reducers";
+import { issueTypeReducer } from "./issuetype/reducers";
+import { kanbanTypeReducer } from "./kanbantype/reducers";
+import { priorityReducer } from "./priority/reducers";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +17,9 @@ const rootReducer = combineReducers({
   errors: errorReducer,
   users: usersReducer,
   currentProject: projectReducer,
+  issueTypes: issueTypeReducer,
+  kanbanTypes: kanbanTypeReducer,
+  priorities: priorityReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
