@@ -4,6 +4,7 @@ import {
   Issue,
   updateIssue,
   getIssuesByProjectId,
+  getIssue,
 } from "../../utils/API/issue_API";
 import {
   DragDropContext,
@@ -171,8 +172,24 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
     this.setState({ showEditModal: !this.state.showEditModal });
   };
 
+  updateIssue = async (issueId: string) => {
+    const { data, success } = await getIssue(issueId);
+    if (success) {
+      const filterList = this.state[data.statusId].filter(
+        (issue) => issue._id !== data._id
+      );
+      // TODO: Insert issue not to end of list, use index given in issue!
+      this.setState(
+        {
+          [data.statusId]: [...filterList, data],
+        } as any,
+        () => console.log(this.state)
+      );
+    }
+  };
+
   render() {
-    const { kanbanTypes, showEditModal, currentIssueId } = this.state;
+    const { showEditModal, currentIssueId } = this.state;
     const { currentUser, priorities, issueTypes } = this.props;
     return (
       <>
@@ -182,197 +199,27 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
             issueId={currentIssueId}
             isOpen={showEditModal}
             currentUser={currentUser}
+            handleUpdate={this.updateIssue}
           />
         )}
-        {!!kanbanTypes.length && (
-          <DragDropContext onDragEnd={this.onDragEnd}>
-            <div className="drag-container">
-              <ul className="drag-list">
-                {this.state.kanbanTypes.map((kanban) => {
-                  return (
-                    <Row
-                      key={kanban._id}
-                      issueTypes={issueTypes}
-                      priorities={priorities}
-                      kanbanType={kanban}
-                      issues={this.state[kanban._id]}
-                      handleEdit={(id) => this.handleEdit(id)}
-                    />
-                  );
-                })}
-                {/* <li className="drag-column drag-column-backlog">
-                  <span className="drag-column-header">
-                    <h2>Backlog</h2>
-                  </span>
-                  <Droppable droppableId={kanbanTypes[0]._id}>
-                    {(provided, snapshot) => (
-                      <ul
-                        className="drag-inner-list"
-                        ref={provided.innerRef}
-                        style={this.getListStyle(snapshot.isDraggingOver)}
-                      >
-                        {this.state[kanbanTypes[0]._id].map(
-                          (issue: Issue, index) => (
-                            <Draggable
-                              key={issue._id}
-                              draggableId={issue._id}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <li
-                                  onClick={() => this.handleEdit(issue._id)}
-                                  className="drag-item"
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  style={this.getItemStyle(
-                                    provided.draggableProps.style,
-                                    snapshot.isDragging
-                                  )}
-                                >
-                                  <section className="top">
-                                    {issue.summary}
-                                  </section>
-                                  <section className="bottom">
-                                    <div className="container">
-                                      <span>{this.getIssueType(issue)}</span>
-                                      <span>{this.getPriority(issue)}</span>
-                                    </div>
-                                  </section>
-                                </li>
-                              )}
-                            </Draggable>
-                          )
-                        )}
-                        {provided.placeholder}
-                      </ul>
-                    )}
-                  </Droppable>
-                </li>
-                <li className="drag-column drag-column-todo">
-                  <span className="drag-column-header">
-                    <h2>Todo</h2>
-                  </span>
-                  <Droppable droppableId={kanbanTypes[1]._id}>
-                    {(provided, snapshot) => (
-                      <ul
-                        className="drag-inner-list"
-                        ref={provided.innerRef}
-                        style={this.getListStyle(snapshot.isDraggingOver)}
-                      >
-                        {this.state[kanbanTypes[1]._id].map((issue, index) => (
-                          <Draggable
-                            key={issue._id}
-                            draggableId={issue._id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <li
-                                onClick={() => this.handleEdit(issue._id)}
-                                className="drag-item"
-                                id={issue._id}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={this.getItemStyle(
-                                  provided.draggableProps.style,
-                                  snapshot.isDragging
-                                )}
-                              >
-                                {issue.summary}
-                              </li>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </ul>
-                    )}
-                  </Droppable>
-                </li>
-                <li className="drag-column drag-column-in-progress">
-                  <span className="drag-column-header">
-                    <h2>In Progress</h2>
-                  </span>
-                  <Droppable droppableId={kanbanTypes[2]._id}>
-                    {(provided, snapshot) => (
-                      <ul
-                        className="drag-inner-list"
-                        ref={provided.innerRef}
-                        style={this.getListStyle(snapshot.isDraggingOver)}
-                      >
-                        {this.state[kanbanTypes[2]._id].map((issue, index) => (
-                          <Draggable
-                            key={issue._id}
-                            draggableId={issue._id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <li
-                                onClick={() => this.handleEdit(issue._id)}
-                                className="drag-item"
-                                id={issue._id}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={this.getItemStyle(
-                                  provided.draggableProps.style,
-                                  snapshot.isDragging
-                                )}
-                              >
-                                {issue.summary}
-                              </li>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </ul>
-                    )}
-                  </Droppable>
-                </li>
-                <li className="drag-column drag-column-done">
-                  <span className="drag-column-header">
-                    <h2>Done</h2>
-                  </span>
-                  <Droppable droppableId={kanbanTypes[3]._id}>
-                    {(provided, snapshot) => (
-                      <ul
-                        className="drag-inner-list"
-                        ref={provided.innerRef}
-                        style={this.getListStyle(snapshot.isDraggingOver)}
-                      >
-                        {this.state[kanbanTypes[3]._id].map((issue, index) => (
-                          <Draggable
-                            key={issue._id}
-                            draggableId={issue._id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <li
-                                onClick={() => this.handleEdit(issue._id)}
-                                className="drag-item"
-                                id={issue._id}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={this.getItemStyle(
-                                  provided.draggableProps.style,
-                                  snapshot.isDragging
-                                )}
-                              >
-                                {issue.summary}
-                              </li>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </ul>
-                    )}
-                  </Droppable>
-                </li>*/}
-              </ul>
-            </div>
-          </DragDropContext>
-        )}
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <div className="drag-container">
+            <ul className="drag-list">
+              {this.state.kanbanTypes.map((kanban) => {
+                return (
+                  <Row
+                    key={kanban._id}
+                    issueTypes={issueTypes}
+                    priorities={priorities}
+                    kanbanType={kanban}
+                    issues={this.state[kanban._id]}
+                    handleEdit={(id) => this.handleEdit(id)}
+                  />
+                );
+              })}
+            </ul>
+          </div>
+        </DragDropContext>
       </>
     );
   }

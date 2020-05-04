@@ -112,6 +112,7 @@
     line-height: 1.42857143;
     max-height: 4.28571429em;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .drag-item .bottom .container {

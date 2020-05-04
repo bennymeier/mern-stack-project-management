@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   Form,
   Modal,
   Message,
@@ -27,6 +26,7 @@ export interface EditModalProps {
   currentUser: User;
   isOpen: boolean;
   handleClose: () => void;
+  handleUpdate: (issueId: string) => void;
 }
 export interface EditModalState {
   isOpen: boolean;
@@ -91,26 +91,6 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
     isOpen: this.props.isOpen,
     isLoading: true,
   };
-  handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // const issue: Partial<Issue> = {
-    //   projectId: projectLabel?.value || "",
-    //   creatorId: currentUser._id,
-    //   issueTypeId: issueTypeLabel?.value || "",
-    //   assigneeId: assigneeLabel?.value || "",
-    //   priorityId: priorityLabel?.value || "",
-    //   statusId: kanbanTypes[0]._id,
-    //   epicId,
-    //   summary,
-    //   description,
-    // };
-    // const { success } = await createIssue(issue);
-    // if (success) {
-    //   handleClose();
-    // } else {
-    //   setError(true);
-    // }
-  };
 
   async componentDidMount() {
     await this.fetchProjects();
@@ -145,6 +125,9 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
     const priority = this.state.priorities.find(
       (priority) => priority._id === priorityId
     );
+    const kanbanType = this.state.kanbanTypes.find(
+      (kanban) => kanban._id === statusId
+    );
     if (success) {
       this.setState({
         currentIssue: data,
@@ -152,6 +135,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
         description,
         projectId,
         isLoading: false,
+        kanbanTypeLabel: this.createKanbanLabel(kanbanType),
         issueTypeLabel: this.createIssueTypeLabel(issueType),
         projectLabel: this.createProjectLabel(project),
         assigneeLabel: this.createAssigneeLabel(user),
@@ -199,7 +183,6 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
 
   fetchIssueTypes = async () => {
     const { data, success } = await getIssueTypes();
-    console.log("ISSUETYPES_LOADED");
     this.setState({ issueTypesAreLoading: false });
     if (success) {
       const prepareData = data.map((issueType) =>
@@ -272,6 +255,8 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
       return "assigneeId";
     } else if (name === "priorityLabel") {
       return "priorityId";
+    } else if (name === "kanbanTypeLabel") {
+      return "statusId";
     } else {
       return "epicId";
     }
@@ -285,20 +270,28 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
       [this.getIssueObjectValueName(name)]: valueId,
     });
     if (success) {
-      this.setState({ [name]: value } as any, () => console.log(this.state));
+      this.setState({ [name]: value } as any);
     }
+  };
+
+  createKanbanLabel = (kanban: KanbanType) => {
+    if (!kanban) return;
+    return {
+      value: kanban._id,
+      label: <>{kanban.label}</>,
+    };
   };
 
   fetchKanbanTypes = async () => {
     const { data, success } = await getKanbanTypes();
     if (success) {
-      const prepareData = data.map((kanbanType, index) => {
+      const prepareData = data.map((kanbanType) => {
         return {
           value: kanbanType._id,
-          label: <></>,
+          label: kanbanType.label,
         };
       });
-      this.setState({ kanbanTypes: data });
+      this.setState({ kanbanTypes: data, kanbanTypesSelect: prepareData });
     }
   };
 
@@ -347,6 +340,17 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
       id="project"
       value={this.state.projectLabel}
       options={this.state.projectsSelect}
+      placeholder=""
+    />
+  );
+
+  KanbanSelect = () => (
+    <Select
+      onChange={this.handleSelect}
+      name="kanbanTypeLabel"
+      id="kanban"
+      value={this.state.kanbanTypeLabel}
+      options={this.state.kanbanTypesSelect}
       placeholder=""
     />
   );
@@ -426,13 +430,15 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
     });
     if (!success) {
       this.setState({ error: true });
-    } else {
-      console.log("success? ", success);
     }
   };
 
   handleClose = () => {
-    this.setState({ isOpen: !this.state.isOpen }, this.props.handleClose);
+    this.setState({ isOpen: !this.state.isOpen }, () => {
+      this.props.handleClose();
+      const { currentIssue } = this.state;
+      this.props.handleUpdate(currentIssue._id);
+    });
   };
 
   render() {
@@ -465,7 +471,7 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
             </Modal.Header>
             <Modal.Content>
               <Modal.Description>
-                <Form onSubmit={this.handleSubmit}>
+                <Form>
                   <Grid columns="2" stackable>
                     <Grid.Column width="10">
                       <Form.Input
@@ -498,6 +504,11 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
                     </Grid.Column>
                     <Grid.Column width="6">
                       <Form.Field
+                        id="kanban"
+                        name="kanbanType"
+                        control={this.KanbanSelect}
+                      />
+                      <Form.Field
                         id="assignee"
                         name="assignee"
                         control={this.AssigneeSelect}
@@ -520,18 +531,10 @@ class EditModal extends React.Component<EditModalProps, EditModalState> {
 
                   <Message
                     error
-                    header="Issue could not be created"
+                    header="Issue could not be updated"
                     visible={this.state.error}
                   />
                 </Form>
-                <Button
-                  basic
-                  color="red"
-                  onClick={this.props.handleClose}
-                  type="button"
-                >
-                  Cancel
-                </Button>
               </Modal.Description>
             </Modal.Content>
           </Modal>

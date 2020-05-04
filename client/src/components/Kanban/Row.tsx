@@ -72,6 +72,7 @@ const Row: React.FC<RowProps> = (props) => {
       >
         <span className="drag-column-header">
           <h2>{kanbanType.label}</h2>
+          <div>{issues.length}</div>
         </span>
         <Droppable droppableId={kanbanType._id}>
           {(provided, snapshot) => (
@@ -98,7 +99,16 @@ const Row: React.FC<RowProps> = (props) => {
                         snapshot.isDragging
                       )}
                     >
-                      <section className="top">{issue.summary}</section>
+                      <Popup
+                        trigger={
+                          <section className="top">{issue.summary}</section>
+                        }
+                        inverted
+                        position="bottom center"
+                        size="small"
+                      >
+                        {issue.summary}
+                      </Popup>
                       <section className="bottom">
                         <div className="container">
                           <span>{getIssueType(issue)}</span>
