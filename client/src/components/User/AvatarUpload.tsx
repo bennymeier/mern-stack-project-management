@@ -23,12 +23,12 @@ const AvatarUpload: React.FC<AvatarUploadProps> = (props) => {
     }
   };
 
-    const handleDelete = async() => {
-      const { success, message} = await deleteAvatar(currentUser._id);
-      if (success) {
-        console.log(message)
-      }
+  const handleDelete = async () => {
+    const { success, message } = await deleteAvatar(currentUser._id);
+    if (success) {
+      console.log(message);
     }
+  };
   return (
     <>
       Path: {avatarData?.destination}, Filename: {avatarData?.filename}
@@ -48,11 +48,13 @@ const AvatarUpload: React.FC<AvatarUploadProps> = (props) => {
         />
         <Button type="submit">Upload</Button>
       </Form>
-      <Button color="red" onClick={handleDelete}>Delete Avatar</Button>
+      <Button color="red" onClick={handleDelete}>
+        Delete Avatar
+      </Button>
     </>
   );
 };
 const mapStateToProps = (state: AppState) => ({
-  currentUser: state.auth.user as User,
+  currentUser: state.auth.user,
 });
 export default connect(mapStateToProps)(AvatarUpload);

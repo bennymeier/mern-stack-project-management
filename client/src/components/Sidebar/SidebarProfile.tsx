@@ -29,6 +29,6 @@ const UserProfile: React.FC<UserProfileProps> = (props) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  currentUser: state.auth.user as User,
+  currentUser: state.auth.user,
 });
 export default connect(mapStateToProps)(UserProfile);

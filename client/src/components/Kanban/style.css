@@ -38,10 +38,6 @@
     margin: 0;
     text-transform: uppercase;
     font-weight: 600;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 .drag-column-backlog .drag-column-header, .drag-column-backlog .is-moved, .drag-column-backlog .drag-options {
@@ -65,6 +61,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .drag-inner-list {

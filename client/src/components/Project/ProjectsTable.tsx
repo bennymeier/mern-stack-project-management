@@ -82,6 +82,6 @@ const ProjectsTable: React.FC<ProjectsTable> = (props) => {
   );
 };
 const mapStateToProps = (state: AppState) => ({
-  currentUser: state.auth.user as User,
+  currentUser: state.auth.user,
 });
 export default connect(mapStateToProps)(ProjectsTable);

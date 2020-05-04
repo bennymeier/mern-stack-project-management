@@ -7,13 +7,15 @@ import CreateIssueModal from "../Issue/CreateModal";
 import { connect } from "react-redux";
 import { AppState } from "../../redux";
 import { User } from "../../utils/API/user_API";
+import { logoutUser } from "../../redux/auth/actions";
 
 export interface FixedMenuProps {
   currentUser?: User;
   location?: any;
+  logoutUser?: typeof logoutUser;
 }
 const FixedMenu: React.FC<FixedMenuProps> = (props) => {
-  const { location, currentUser } = props;
+  const { location, currentUser, logoutUser } = props;
   const { pathname } = location;
   const [isProjectOpen, setProjectOpen] = useState(false);
   const [isIssueOpen, setIssueOpen] = useState(false);
@@ -23,13 +25,13 @@ const FixedMenu: React.FC<FixedMenuProps> = (props) => {
       <CreateProjectModal
         isOpen={isProjectOpen}
         handleClose={() => setProjectOpen(false)}
-        currentUser={currentUser as User}
+        currentUser={currentUser}
       />
       {isIssueOpen && (
         <CreateIssueModal
           isOpen={isIssueOpen}
           handleClose={() => setIssueOpen(false)}
-          currentUser={currentUser as User}
+          currentUser={currentUser}
         />
       )}
       <Menu fixed="top" inverted>
@@ -90,11 +92,13 @@ const FixedMenu: React.FC<FixedMenuProps> = (props) => {
             <Dropdown.Menu>
               <Dropdown.Item>Personal Settings</Dropdown.Item>
               <Dropdown.Divider></Dropdown.Divider>
-              <Dropdown.Header>Username</Dropdown.Header>
+              <Dropdown.Header>
+                {currentUser.firstname} {currentUser?.lastname}
+              </Dropdown.Header>
               <Dropdown.Item>Profile</Dropdown.Item>
               <Dropdown.Item>Account Settings</Dropdown.Item>
               <Dropdown.Divider></Dropdown.Divider>
-              <Dropdown.Item>Log out</Dropdown.Item>
+              <Dropdown.Item onClick={logoutUser}>Log out</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Menu.Menu>
@@ -105,4 +109,4 @@ const FixedMenu: React.FC<FixedMenuProps> = (props) => {
 const mapStateToProps = (state: AppState) => ({
   currentUser: state.auth.user,
 });
-export default connect(mapStateToProps)(withRouter(FixedMenu));
+export default connect(mapStateToProps, { logoutUser })(withRouter(FixedMenu));

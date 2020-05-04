@@ -2,7 +2,7 @@ import { User } from "../../utils/API/user_API";
 
 export interface AuthState {
   isAuthenticated: boolean;
-  user: User | undefined;
+  user: User;
   loading: boolean;
 }
 
