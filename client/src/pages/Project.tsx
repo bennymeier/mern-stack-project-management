@@ -74,7 +74,7 @@ const Project: React.FC<ProjectProps> = (props) => {
       {!isLoading && project && (
         <>
           <ProjectBreadcrumb name={project.name} projectKey={project.key} />
-          <ProjectHeader />
+          <ProjectHeader project={project}/>
           <ProjectContent />
         </>
       )}

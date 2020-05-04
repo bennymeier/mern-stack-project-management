@@ -1,10 +1,32 @@
-import React from "react";
-import { Icon, Dropdown } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Icon, Dropdown, Confirm } from "semantic-ui-react";
+import {
+  deleteProject as deleteProjectAPI,
+  Project,
+} from "../../utils/API/project_API";
+import { routes } from "../../utils/routes";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-export interface ProjectHeaderProps {}
+export interface ProjectHeaderProps extends RouteComponentProps {
+  project: Project;
+}
 const ProjectHeader: React.FC<ProjectHeaderProps> = (props) => {
+  const { project, history } = props;
+  const [isOpen, setOpen] = useState(false);
+  const deleteProject = async () => {
+    const { success } = await deleteProjectAPI(project._id);
+    if (success) {
+      history.push(routes.PROJECTS);
+    }
+  };
   return (
     <>
+      <Confirm
+        content={`Are you sure you want to delete ${project.name}?`}
+        open={isOpen}
+        onCancel={() => setOpen(false)}
+        onConfirm={deleteProject}
+      />
       <div className="project-header">
         <div className="left">
           <h1>Kanban Board</h1>
@@ -25,6 +47,10 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (props) => {
             <Dropdown.Menu>
               <Dropdown.Item text="Board Settings" />
               <Dropdown.Item text="Create Board" />
+              <Dropdown.Item
+                text="Delete Board"
+                onClick={() => setOpen(true)}
+              />
             </Dropdown.Menu>
           </Dropdown>
         </div>
@@ -33,4 +59,4 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (props) => {
   );
 };
 
-export default ProjectHeader;
+export default withRouter(ProjectHeader);

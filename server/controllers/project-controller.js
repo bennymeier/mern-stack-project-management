@@ -1,4 +1,5 @@
 const Project = require("../db/models/project-model");
+const Issue = require("../db/models/issue-model");
 
 const createProject = async (req, res) => {
   const body = req.body;
@@ -61,7 +62,7 @@ const deleteProject = async (req, res) => {
         .status(404)
         .json({ success: false, error: `Project not found` });
     }
-
+    await Issue.deleteMany({ projectId: req.params.id });
     return res.status(200).json({ success: true, id: project._id });
   } catch (error) {
     return res.status(400).json({ success: false, error });
