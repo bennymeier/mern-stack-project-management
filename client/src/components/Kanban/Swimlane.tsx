@@ -115,8 +115,6 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-    console.log("RES ", result);
-
     return result;
   };
 
@@ -175,16 +173,14 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
   updateIssue = async (issueId: string) => {
     const { data, success } = await getIssue(issueId);
     if (success) {
-      const filterList = this.state[data.statusId].filter(
-        (issue) => issue._id !== data._id
+      const issueIndex = this.state[data.statusId].findIndex(
+        (issue) => issue._id === issueId
       );
-      // TODO: Insert issue not to end of list, use index given in issue!
-      this.setState(
-        {
-          [data.statusId]: [...filterList, data],
-        } as any,
-        () => console.log(this.state)
-      );
+      let issues = [...this.state[data.statusId]];
+      issues[issueIndex] = data;
+      this.setState({
+        [data.statusId]: issues,
+      } as any);
     }
   };
 
