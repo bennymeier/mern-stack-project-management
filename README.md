@@ -1,3 +1,4 @@
+# Trying to build a Jira Kanban clone with MongoDB, Express, React and Node.js
 ## Install backend
 1. Create a MongoDB instance
 2. Edit the _index.js_ in _/server/db/_
