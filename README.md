@@ -1,4 +1,7 @@
 ## Jira clone with MongoDB, Express, React and Node.js
+![image](https://raw.githubusercontent.com/bennymeier/mern-stack-project-management/master/kanban_board.PNG)
+![image](https://raw.githubusercontent.com/bennymeier/mern-stack-project-management/master/create_issue.PNG)
+![image](https://raw.githubusercontent.com/bennymeier/mern-stack-project-management/master/edit_issue.PNG)
 ## Install backend
 1. Create a MongoDB instance
 2. Edit the _index.js_ in _/server/db/_
