@@ -126,7 +126,6 @@ class Swimlane extends React.Component<SwimlaneProps, SwimlaneState> {
       return;
     }
     const { droppableId: destinationDropId } = destination;
-
     if (sourceDropId === destinationDropId) {
       const items = this.reorder(
         this.state[sourceDropId],

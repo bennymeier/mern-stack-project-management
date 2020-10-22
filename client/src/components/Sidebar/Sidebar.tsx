@@ -16,6 +16,7 @@ export interface SidebarProps {
 }
 const Sidebar: React.FC<SidebarProps> = (props) => {
   const [rooms, setRooms] = useState<Room[]>([]);
+  // @ts-ignore
   const { id: currentRoomId } = useParams();
 
   useEffect(() => {

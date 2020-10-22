@@ -30,6 +30,7 @@ const Project: React.FC<ProjectProps> = (props) => {
     setKanbanTypes,
     setPriorities,
   } = props;
+  // @ts-ignore
   const { id } = useParams();
   const [project, setProject] = useState<ProjectTypes>();
   const [isLoading, setLoading] = useState(true);
