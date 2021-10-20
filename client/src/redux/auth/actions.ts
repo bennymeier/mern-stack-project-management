@@ -14,23 +14,22 @@ export interface RegisterData {
 }
 export type LoginData = Omit<RegisterData, "name" | "password2" | "firstname">;
 // Register User
-export const registerUser = (userData: RegisterData, history: any) => (
-  dispatch: any
-) => {
-  API.post("/register", userData)
-    .then(() => history.push("/"))
-    .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
+export const registerUser =
+  (userData: RegisterData, history: any) => (dispatch: any) => {
+    API.post("/register", userData)
+      .then(() => history.push("/"))
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response.data,
+        });
       });
-    });
-};
+  };
 
 // Login - get user token
 export const loginUser = (userData: LoginData) => (dispatch: any) => {
   API.post("/login", userData)
-    .then((res) => {
+    .then((res: any) => {
       // Save to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
@@ -42,6 +41,7 @@ export const loginUser = (userData: LoginData) => (dispatch: any) => {
       dispatch(setCurrentUser(decoded));
     })
     .catch((err) => {
+      console.log(err)
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,

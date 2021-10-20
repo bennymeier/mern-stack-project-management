@@ -17,10 +17,10 @@ export interface UploadAvatar {
 }
 export const uploadAvatar = async (
   userId: string,
-  avatar: any
+  avatar: FormData
 ): Promise<UploadAvatar> => {
   try {
-    const { data } = await API.post(`/avatar/${userId}`, avatar, {
+    const { data } = await API.post<any>(`/avatar/${userId}`, avatar, {
       onUploadProgress: (progressEvent) => {
         const percentCompleted = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total
@@ -42,7 +42,7 @@ export interface DeleteAvatar {
 }
 export const deleteAvatar = async (userId: string): Promise<DeleteAvatar> => {
   try {
-    const { data } = await API.delete(`/avatar/${userId}`);
+    const { data } = await API.delete<any>(`/avatar/${userId}`);
     return data;
   } catch (err) {
     return err;
@@ -56,7 +56,7 @@ export interface GetAvatars {
 }
 export const getAvatars = async (): Promise<GetAvatars> => {
   try {
-    const { data } = await API.get("/avatars");
+    const { data } = await API.get<any>("/avatars");
     return data;
   } catch (err) {
     return err;

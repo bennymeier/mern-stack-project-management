@@ -2,10 +2,15 @@ import axios from "axios";
 
 const getToken = () => localStorage.getItem("jwtToken");
 export const API = axios.create({
-  baseURL: "http://localhost:1337/api",
+  baseURL: "http://localhost:1400/api",
   responseType: "json",
   headers: { Authorization: `${getToken()}` },
 });
+
+export interface GeneralAxiosRes {
+  data: any;
+  success: boolean;
+}
 
 export interface Room {
   members: string[];
@@ -24,7 +29,7 @@ export interface GetRooms {
 
 export const getRooms = async (): Promise<GetRooms> => {
   try {
-    const { data } = await API.get("/rooms");
+    const { data } = await API.get<GeneralAxiosRes>("/rooms");
     return data;
   } catch (err) {
     console.error(err);
@@ -39,7 +44,7 @@ export interface GetRoom {
 
 export const getRoom = async (roomId: string): Promise<GetRoom> => {
   try {
-    const { data } = await API.get(`/room/${roomId}`);
+    const { data } = await API.get<GeneralAxiosRes>(`/room/${roomId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -54,7 +59,7 @@ export interface DeleteRoom {
 
 export const deleteRoom = async (roomId: string): Promise<DeleteRoom> => {
   try {
-    const { data } = await API.delete(`/room/${roomId}`);
+    const { data } = await API.delete<GeneralAxiosRes>(`/room/${roomId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -73,7 +78,7 @@ export const updateRoom = async (
   roomData: Partial<Room>
 ): Promise<UpdateRoom> => {
   try {
-    const { data } = await API.put(`/room/${roomId}`, roomData);
+    const { data } = await API.put<any>(`/room/${roomId}`, roomData);
     return data;
   } catch (err) {
     console.error(err);
@@ -90,7 +95,7 @@ export interface CreateRoom {
 
 export const createRoom = async (roomData: RoomData): Promise<CreateRoom> => {
   try {
-    const { data } = await API.post(`/room`, roomData);
+    const { data } = await API.post<any>(`/room`, roomData);
     return data;
   } catch (err) {
     console.error(err);
@@ -116,7 +121,7 @@ export interface GetMessages {
 
 export const getMessages = async (to: string): Promise<GetMessages> => {
   try {
-    const { data } = await API.get(`/messages/${to}`);
+    const { data } = await API.get<GeneralAxiosRes>(`/messages/${to}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -131,7 +136,7 @@ export interface GetMessage {
 
 export const getMessage = async (messageId: string): Promise<GetMessage> => {
   try {
-    const { data } = await API.get(`/message/${messageId}`);
+    const { data } = await API.get<GeneralAxiosRes>(`/message/${messageId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -148,7 +153,7 @@ export const deleteMessage = async (
   messageId: string
 ): Promise<DeleteMessage> => {
   try {
-    const { data } = await API.delete(`/message/${messageId}`);
+    const { data } = await API.delete<GeneralAxiosRes>(`/message/${messageId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -167,7 +172,7 @@ export const updateMessage = async (
   messageData: Partial<Message>
 ): Promise<UpdateMessage> => {
   try {
-    const { data } = await API.put(`/message/${messageId}`, messageData);
+    const { data } = await API.put<any>(`/message/${messageId}`, messageData);
     return data;
   } catch (err) {
     console.error(err);
@@ -189,7 +194,7 @@ export const createMessage = async (
   messageData: MessageData
 ): Promise<CreateMessage> => {
   try {
-    const { data } = await API.post(`/message`, messageData);
+    const { data } = await API.post<any>(`/message`, messageData);
     return data;
   } catch (err) {
     console.error(err);

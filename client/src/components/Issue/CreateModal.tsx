@@ -71,7 +71,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
     const fetchProjects = async () => {
       const { data, success } = await getProjects();
       setProjectsLoading(false);
-      if (success) {
+      if (success && data.length) {
         setProjectLabel({
           value: data[0]._id,
           label: `${data[0].name} (${data[0].key})`,
@@ -202,7 +202,7 @@ const CreateModal: React.FC<CreateModalProps> = (props) => {
       value={projectLabel}
       options={projects}
       placeholder=""
-      tabIndex="1"
+      tabIndex={1}
     />
   );
 

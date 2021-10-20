@@ -20,7 +20,7 @@ export const createPriority = async (
   priority: Partial<Priority>
 ): Promise<CreatePriority> => {
   try {
-    const { data } = await API.post("/priority", priority);
+    const { data } = await API.post<any>("/priority", priority);
     return data;
   } catch (err) {
     return err;
@@ -33,7 +33,7 @@ export interface GetPriority {
 }
 export const getPriority = async (id: string): Promise<GetPriority> => {
   try {
-    const { data } = await API.get(`/priority/${id}`);
+    const { data } = await API.get<any>(`/priority/${id}`);
     return data;
   } catch (err) {
     return err;
@@ -47,7 +47,7 @@ export interface GetPriorities {
 }
 export const getPriorities = async (): Promise<GetPriorities> => {
   try {
-    const { data } = await API.get("/priorities");
+    const { data } = await API.get<any>("/priorities");
     return data;
   } catch (err) {
     return err;
@@ -63,7 +63,7 @@ export const updatePriority = async (
   priority: Partial<Priority>
 ): Promise<UpdatePriority> => {
   try {
-    const { data } = await API.put(`/priority/${id}`, priority);
+    const { data } = await API.put<any>(`/priority/${id}`, priority);
     return data;
   } catch (err) {
     return err;
@@ -77,7 +77,7 @@ export interface DeletePriority {
 }
 export const deletePriority = async (id: string): Promise<DeletePriority> => {
   try {
-    const { data } = await API.delete(`/priority/${id}`);
+    const { data } = await API.delete<any>(`/priority/${id}`);
     return data;
   } catch (err) {
     return err;

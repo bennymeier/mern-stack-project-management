@@ -17,7 +17,7 @@ export const createKanbanType = async (
   kanbantype: Partial<KanbanType>
 ): Promise<CreateKanbanType> => {
   try {
-    const { data } = await API.post("/kanbantype", kanbantype);
+    const { data } = await API.post<any>("/kanbantype", kanbantype);
     return data;
   } catch (err) {
     return err;
@@ -30,7 +30,7 @@ export interface GetKanbanType {
 }
 export const getKanbanType = async (id: string): Promise<GetKanbanType> => {
   try {
-    const { data } = await API.get(`/kanbantype/${id}`);
+    const { data } = await API.get<any>(`/kanbantype/${id}`);
     return data;
   } catch (err) {
     return err;
@@ -44,7 +44,7 @@ export interface GetKanbanTypes {
 }
 export const getKanbanTypes = async (): Promise<GetKanbanTypes> => {
   try {
-    const { data } = await API.get("/kanbantypes");
+    const { data } = await API.get<any>("/kanbantypes");
     return data;
   } catch (err) {
     return err;
@@ -60,7 +60,7 @@ export const updateKanbanType = async (
   priority: Partial<KanbanType>
 ): Promise<UpdateKanbanType> => {
   try {
-    const { data } = await API.put(`/kanbantype/${id}`, priority);
+    const { data } = await API.put<any>(`/kanbantype/${id}`, priority);
     return data;
   } catch (err) {
     return err;
@@ -76,7 +76,7 @@ export const deleteKanbanType = async (
   id: string
 ): Promise<DeleteKanbanType> => {
   try {
-    const { data } = await API.delete(`/kanbantype/${id}`);
+    const { data } = await API.delete<any>(`/kanbantype/${id}`);
     return data;
   } catch (err) {
     return err;

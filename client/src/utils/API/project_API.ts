@@ -19,7 +19,7 @@ export const createProject = async (
   project: Partial<Project>
 ): Promise<CreateProject> => {
   try {
-    const { data } = await API.post("/project", project);
+    const { data } = await API.post<any>("/project", project);
     return data;
   } catch (err) {
     return err;
@@ -32,7 +32,7 @@ export interface GetProject {
 }
 export const getProject = async (id: string): Promise<GetProject> => {
   try {
-    const { data } = await API.get(`/project/${id}`);
+    const { data } = await API.get<any>(`/project/${id}`);
     return data;
   } catch (err) {
     return err;
@@ -41,7 +41,7 @@ export const getProject = async (id: string): Promise<GetProject> => {
 
 export const getProjectByKey = async (key: string): Promise<GetProject> => {
   try {
-    const { data } = await API.get(`/project/${key}`);
+    const { data } = await API.get<any>(`/project/${key}`);
     return data;
   } catch (err) {
     return err;
@@ -55,7 +55,7 @@ export interface GetProjects {
 }
 export const getProjects = async (): Promise<GetProjects> => {
   try {
-    const { data } = await API.get("/projects");
+    const { data } = await API.get<any>("/projects");
     return data;
   } catch (err) {
     return err;
@@ -71,7 +71,7 @@ export const updateProject = async (
   project: Partial<Project>
 ): Promise<UpdateProject> => {
   try {
-    const { data } = await API.put(`/project/${id}`, project);
+    const { data } = await API.put<any>(`/project/${id}`, project);
     return data;
   } catch (err) {
     return err;
@@ -85,7 +85,7 @@ export interface DeleteProject {
 }
 export const deleteProject = async (id: string): Promise<DeleteProject> => {
   try {
-    const { data } = await API.delete(`/project/${id}`);
+    const { data } = await API.delete<any>(`/project/${id}`);
     return data;
   } catch (err) {
     return err;

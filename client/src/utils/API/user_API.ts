@@ -27,7 +27,7 @@ export const updateUser = async (
   user: Partial<User>
 ): Promise<UpdateUser> => {
   try {
-    const { data } = await API.put(`/user/${id}`, user);
+    const { data } = await API.put<any>(`/user/${id}`, user);
     return data;
   } catch (err) {
     return err;
@@ -41,7 +41,7 @@ export interface GetUserByMail {
 }
 export const getUserByMail = async (email: string): Promise<GetUserByMail> => {
   try {
-    const { data } = await API.get(`/user/${email}`);
+    const { data } = await API.get<any>(`/user/${email}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -56,7 +56,7 @@ export interface GetUsers {
 }
 export const getUsers = async (): Promise<GetUsers> => {
   try {
-    const { data } = await API.get("/users");
+    const { data } = await API.get<any>("/users");
     return data;
   } catch (err) {
     console.error(err);

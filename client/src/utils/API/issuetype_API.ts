@@ -20,7 +20,7 @@ export const createIssueType = async (
   issuetype: Partial<IssueType>
 ): Promise<CreateIssueType> => {
   try {
-    const { data } = await API.post("/issuetype", issuetype);
+    const { data } = await API.post<any>("/issuetype", issuetype);
     return data;
   } catch (err) {
     return err;
@@ -33,7 +33,7 @@ export interface GetIssueType {
 }
 export const getIssueType = async (id: string): Promise<GetIssueType> => {
   try {
-    const { data } = await API.get(`/issuetype/${id}`);
+    const { data } = await API.get<any>(`/issuetype/${id}`);
     return data;
   } catch (err) {
     return err;
@@ -47,7 +47,7 @@ export interface GetIssueTypes {
 }
 export const getIssueTypes = async (): Promise<GetIssueTypes> => {
   try {
-    const { data } = await API.get("/issuetypes");
+    const { data } = await API.get<any>("/issuetypes");
     return data;
   } catch (err) {
     return err;
@@ -63,7 +63,7 @@ export const updateIssueType = async (
   issuetype: Partial<IssueType>
 ): Promise<UpdateIssueType> => {
   try {
-    const { data } = await API.put(`/issuetype/${id}`, issuetype);
+    const { data } = await API.put<any>(`/issuetype/${id}`, issuetype);
     return data;
   } catch (err) {
     return err;
@@ -77,7 +77,7 @@ export interface DeleteIssueType {
 }
 export const deleteIssueType = async (id: string): Promise<DeleteIssueType> => {
   try {
-    const { data } = await API.delete(`/issuetype/${id}`);
+    const { data } = await API.delete<any>(`/issuetype/${id}`);
     return data;
   } catch (err) {
     return err;
