@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Search } from "semantic-ui-react";
 
 export interface ProjectSearchProps {}

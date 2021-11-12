@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Segment, Button, Header, Message } from "semantic-ui-react";
-import { useHistory,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { loginUser, LoginData } from "../../redux/auth/actions";
 import { AppState } from "../../redux";
@@ -22,7 +22,7 @@ const Login: React.FC<LoginProps> = (props) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>();
   const { auth, loginUser, errors: errorsFromProps, handleRegister } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Login: React.FC<LoginProps> = (props) => {
     let { from } = location.state || { from: { pathname: "/home" } };
     // If logged in and user navigates to Login page, should redirect them to dashboard
     if (auth?.isAuthenticated) {
-      history.replace(from);
+      navigate(from, { replace: true });
     }
   }, [auth]);
 

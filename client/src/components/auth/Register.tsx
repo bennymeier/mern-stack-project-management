@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { Form, Segment, Button, Header, Message } from "semantic-ui-react";
 import { registerUser, RegisterData } from "../../redux/auth/actions";
@@ -20,12 +20,12 @@ const Register: React.FC<RegisterProps> = (props) => {
   const [password2, setPassword2] = useState("");
   const [errors, setErrors] = useState<any>();
   const { auth, errors: errorsFromProps, registerUser, handleRegister } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // If logged in and user navigates to Login page, should redirect them to dashboard
     if (auth?.isAuthenticated) {
-      history.push("/home");
+      navigate("/home");
     }
   }, [auth]);
 
@@ -42,7 +42,7 @@ const Register: React.FC<RegisterProps> = (props) => {
       password,
       password2,
     };
-    registerUser(newUser, history);
+    registerUser(newUser, navigate);
   };
 
   return (

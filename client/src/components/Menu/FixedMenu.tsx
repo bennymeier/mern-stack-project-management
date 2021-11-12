@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dropdown, Menu, Button } from "semantic-ui-react";
 import { routes } from "../../utils/routes";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CreateProjectModal from "../Project/CreateModal";
 import CreateIssueModal from "../Issue/CreateModal";
 import { connect } from "react-redux";
@@ -11,12 +11,13 @@ import { logoutUser } from "../../redux/auth/actions";
 
 export interface FixedMenuProps {
   currentUser?: User;
-  location?: any;
   logoutUser?: typeof logoutUser;
 }
 const FixedMenu: React.FC<FixedMenuProps> = (props) => {
-  const { location, currentUser, logoutUser } = props;
+  const { currentUser, logoutUser } = props;
+  const location = useLocation();
   const { pathname } = location;
+
   const [isProjectOpen, setProjectOpen] = useState(false);
   const [isIssueOpen, setIssueOpen] = useState(false);
 
@@ -109,4 +110,4 @@ const FixedMenu: React.FC<FixedMenuProps> = (props) => {
 const mapStateToProps = (state: AppState) => ({
   currentUser: state.auth.user,
 });
-export default connect(mapStateToProps, { logoutUser })(withRouter(FixedMenu));
+export default connect(mapStateToProps, { logoutUser })(FixedMenu);

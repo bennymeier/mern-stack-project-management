@@ -5,18 +5,19 @@ import {
   Project,
 } from "../../utils/API/project_API";
 import { routes } from "../../utils/routes";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export interface ProjectHeaderProps extends RouteComponentProps {
+export interface ProjectHeaderProps {
   project: Project;
 }
 const ProjectHeader: React.FC<ProjectHeaderProps> = (props) => {
-  const { project, history } = props;
+  const { project } = props;
+  const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
   const deleteProject = async () => {
     const { success } = await deleteProjectAPI(project._id);
     if (success) {
-      history.push(routes.PROJECTS);
+      navigate(routes.PROJECTS);
     }
   };
   return (
@@ -59,4 +60,4 @@ const ProjectHeader: React.FC<ProjectHeaderProps> = (props) => {
   );
 };
 
-export default withRouter(ProjectHeader);
+export default ProjectHeader;

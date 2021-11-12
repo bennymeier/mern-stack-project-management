@@ -6,10 +6,10 @@ import { AppState } from "../../redux";
 import { User, updateUser } from "../../utils/API/user_API";
 import { Link } from "react-router-dom";
 
-export interface ProjectsTable {
+export interface ProjectsTableProps {
   currentUser: User;
 }
-const ProjectsTable: React.FC<ProjectsTable> = (props) => {
+const ProjectsTable: React.FC<ProjectsTableProps> = (props) => {
   const { currentUser } = props;
   const [projects, setProjects] = useState<Project[]>([]);
   const [favoriteProjects, setFavorites] = useState<string[]>(

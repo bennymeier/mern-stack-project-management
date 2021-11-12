@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { configureStore } from "./redux/index";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Landing from "./components/auth/Landing";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import jwt_decode from "jwt-decode";
@@ -56,23 +56,57 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Route exact path="/" component={Landing} />
-        <Switch>
-          <PrivateRoute exact path={routes["HOME"]} component={Home} />
-          <PrivateRoute exact path={routes["YOUR_WORK"]} component={YourWork} />
-          <PrivateRoute exact path={routes["PROJECTS"]} component={Projects} />
-          <PrivateRoute
-            exact
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route
+            path={routes["HOME"]}
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={routes["YOUR_WORK"]}
+            element={
+              <PrivateRoute>
+                <YourWork />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={routes["PROJECTS"]}
+            element={
+              <PrivateRoute>
+                <Projects />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path={`${routes["PROJECTS"]}/:id`}
-            component={Project}
+            element={
+              <PrivateRoute>
+                <Project />
+              </PrivateRoute>
+            }
           />
-          <PrivateRoute
-            exact
+          <Route
             path={routes["DASHBOARDS"]}
-            component={Dashboards}
+            element={
+              <PrivateRoute>
+                <Dashboards />
+              </PrivateRoute>
+            }
           />
-          <PrivateRoute exact path={routes["PEOPLE"]} component={People} />
-        </Switch>
+          <Route
+            path={routes["PEOPLE"]}
+            element={
+              <PrivateRoute>
+                <People />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
       </Router>
     </Provider>
   );
